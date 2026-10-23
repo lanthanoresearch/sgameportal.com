@@ -775,6 +775,12 @@ h1 em{display:block;font-style:normal;font-size:.42em;margin-top:6px;color:#e847
 #tabs button.on,#stabs button.on{background:#e8474c;color:#fff;box-shadow:0 3px 0 #a52d31}
 #tabs button i,#stabs button i{position:absolute;right:-3px;top:-6px;background:#2e8b57;color:#fff;border-radius:10px;min-width:16px;font-size:11px;font-style:normal;padding:0 4px}
 #pc,#pwc,#dc,#shc{max-width:520px;margin:0 auto;color:#35506a}
+.hslots{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;margin:8px 0;align-items:end}
+.hs{border:0;border-radius:16px;background:#fff;box-shadow:0 4px 0 #0002;padding:6px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font:700 12px/1.1 Fredoka,system-ui,sans-serif;color:#35506a}
+.hs span{width:100%;height:64px;border-radius:12px;background:#dcebf5;display:flex;align-items:center;justify-content:center;font-size:26px;color:#7f9db3;overflow:hidden}
+.hs.big span{height:84px}
+.hs img{width:100%;height:100%;object-fit:contain}
+.hs small{font-weight:600;opacity:.75;font-size:11px}
 .pcard{display:flex;align-items:center;gap:10px;background:#fff;border-radius:18px;padding:10px 12px;margin:8px 0;box-shadow:0 4px 0 #0002}
 .pcard .em{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--c,#8a9db0);color:#fff;box-shadow:inset 0 -3px 0 #0002}
 .dk .sub{color:#e6ecff}
@@ -942,7 +948,7 @@ document.querySelectorAll('[data-ic]').forEach(e=>{e.innerHTML=ic(e.dataset.ic,+
 
 const COL={R:0xe8474c,W:0xf6f3ee,G:0x78c850,B:0x3b78e0,P:0x9150c8,O:0xf59a2b,Y:0xf5d04a,C:0xf1c9b6,K:0x7a5236,N:0xf08aa8,S:0xaab4c4,D:0x3a2c2a,L:0xb8dcf5,T:0x2fb5a8,M:0xe0509a,A:0x2a3a6a,E:0x2f8f3f,Z:0xe9d9a6,X:0x6b7280,U:0xb7e04a};
 const hex=k=>'#'+COL[k].toString(16).padStart(6,'0');
-const defSave=()=>({coins:60,done:{},u:{},fs:false,vib:true,hq:true,tips2:false,music:true,sfx:true,inv:{drill:0,vac:1,cut:0,luck:0,hint:1,wand:0,sweep:0,trip:0},st:{},day:{d:'',s:{},c:{},l:null},claimed:{},lost:{},bought:{},ds:{n:0,last:''},shop:{own:{},eq:{home:['Kitty','Mushroom House','Pony'],bg:'sky',thr:'classic'}},gt:{d:'',s:0,w:0},v:3});
+const defSave=()=>({coins:60,done:{},u:{},fs:false,vib:true,hq:true,music:true,sfx:true,inv:{drill:0,vac:1,cut:0,luck:0,hint:1,wand:0,sweep:0,trip:0},st:{},day:{d:'',s:{},c:{},l:null},claimed:{},lost:{},bought:{},ds:{n:0,last:''},shop:{own:{},eq:{home:['Kitty','Mushroom House','Pony'],bg:'sky',thr:'classic'}},gt:{d:'',s:0,w:0},v:3});
 let save=defSave();
 try{const raw=(localStorage.getItem('yarnunravel.v1.save')||localStorage.getItem('yu3d3'));if(raw)Object.assign(save,JSON.parse(raw));else{const o=JSON.parse(localStorage.getItem('yu3d2')||'null');if(o){save.coins=Math.max(60,o.coins||0);save.u=o.u||{};['fs','vib','hq'].forEach(k=>{if(k in o)save[k]=o[k]})}}}catch(e){}
 save.inv=Object.assign({drill:0,vac:0,cut:0,luck:0,hint:0,wand:0,sweep:0,trip:0},save.inv);Object.keys(save.inv).forEach(k=>{save.inv[k]=Math.max(0,Math.min(99,save.inv[k]|0))});save.mk=save.mk||{};save.st=save.st||{};save.claimed=save.claimed||{};save.lost=save.lost||{};save.bought=save.bought||{};save.ds=save.ds||{n:0,last:''};save.shop=save.shop||{};save.shop.own=save.shop.own||{};save.shop.eq=Object.assign({home:['Kitty','Mushroom House','Pony'],bg:'sky',thr:'classic'},save.shop.eq);save.gt=Object.assign({d:'',s:0,w:0},save.gt);if(save.gt.s===3)save.gt.s=2;
@@ -3924,8 +3930,10 @@ function helpFlags(){
 const cprice=k=>r5(bprice(k,false)*1.1);
 function gameOver(){
  if(over)return;over=true;sfx.bad();vib([60,40,60]);save.st.streak=0;save.lost[cur]=1;persist();toggleTray(false);clearHint();overOv()}
-function overOv(){
- const hf=helpFlags(),ks=['drill','vac','cut','luck','wand','sweep','trip'],o=$('#ov');
+function overOv(full){
+ if(!full){const o=$('#ov');o.innerHTML='<div><h2>Game Over</h2><p>No more room for yarn.<br>Plan ahead and try again.</p></div>';const bt=(t,l,f)=>{const b=document.createElement('button');b.className='big'+(l?' l':'');b.textContent=t;b.onclick=()=>{o.classList.add('hide');f()};o.firstChild.appendChild(b)};const hf0=helpFlags(),T1=parts.filter(p=>!p.done&&tgtLayer(p)),pk1=peekQ(),canU=!!document.querySelector('#hd .plus')||(!!document.querySelector('#sk .plus')&&pk1!==null&&T1.some(p=>tgtLayer(p).col===pk1));if(!(Object.values(hf0).some(Boolean)||canU)){bt('Retry',0,()=>startLevel(cur,lastO));bt(rmode?'Home':'Levels',1,toLevels);o.classList.remove('hide');return}
+ const u=document.createElement('button');u.className='big';u.textContent='Continue';u.onclick=()=>overOv(true);o.firstChild.appendChild(u);bt('Retry',1,()=>startLevel(cur,lastO));bt(rmode?'Home':'Levels',1,toLevels);o.classList.remove('hide');return}
+ const T0=performance.now();const hf=helpFlags(),ks=['drill','vac','cut','luck','wand','sweep','trip'],o=$('#ov');
  const uk=[...document.querySelectorAll('#hd .plus')].map(e=>e.dataset.k)[0],sk=[...document.querySelectorAll('#sk .plus')].map(e=>e.dataset.k)[0];
  const pkc=peekQ(),T=parts.filter(p=>!p.done&&tgtLayer(p));
  const ub=[];if(uk)ub.push({u:uk,n:'Spare slot',ic:'lock',c:'#5b7fa6',ok:true});if(sk)ub.push({u:sk,n:'New skein',ic:'plus',c:'#5bb637',ok:pkc!==null&&T.some(p=>tgtLayer(p).col===pkc)});
@@ -3935,7 +3943,7 @@ function overOv(){
  const bt=(t,l,f)=>{const b=document.createElement('button');b.className='big'+(l?' l':'');b.textContent=t;b.onclick=()=>{o.classList.add('hide');f()};o.firstChild.appendChild(b)};
  bt('Retry',0,()=>startLevel(cur,lastO));bt(rmode?'Home':'Levels',1,toLevels);
  o.classList.remove('hide');
- $('#cgrid').onclick=e=>{const b=e.target.closest('.cg');if(!b||b.disabled)return;const k=b.dataset.k;
+ $('#cgrid').onclick=e=>{const b=e.target.closest('.cg');if(!b||b.disabled||performance.now()-T0<700)return;const k=b.dataset.k;
   if(k[0]==='u'){const c=ucost(k.slice(2));if(save.coins<c){toast(`You need ${fmtc(c-save.coins)} more coins`);sfx.bad();return}o.classList.add('hide');over=false;buy(k.slice(2),1);setTimeout(()=>{if(!over&&scr==='game'&&isStuck()&&!stuckT)checkEnd()},300);return}
   if(!save.inv[k]){const pr=cprice(k);if(save.coins<pr){toast(`You need ${fmtc(pr-save.coins)} more coins`);sfx.bad();return}
    save.coins-=pr;addInv(k,PK[k].n);save.bought[k]=(save.bought[k]||0)+1;stat('buys');persist();sfx.coin();document.querySelectorAll('.cn').forEach(x=>x.textContent=save.coins)}
@@ -4172,11 +4180,23 @@ const sOwn=(c,it)=>!!(it.free||(it.gt?(save.gt.w||0)>=it.gt:save.shop.own[c+':'+
 const sOn=(c,it)=>c==='f'?save.shop.eq.home.includes(it.id):c==='b'?save.shop.eq.bg===it.id:save.shop.eq.thr===it.id;
 function applyBg(){const b=SHOP.b.find(x=>x.id===save.shop.eq.bg)||SHOP.b[0];document.documentElement.style.background=b.css;document.body.style.background=b.css;{const e=$('#bg');if(e)e.style.background=b.id==='sky'?'':b.css}document.body.style.backgroundAttachment='fixed';document.body.classList.toggle('dk',b.id==='night')}
 function thrFx(m){const t=save.shop.eq.thr;if(t==='silk'){m.roughness=.42;m.bumpScale=.9}else if(t==='fuzzy'){m.bumpScale=3;m.roughness=1}else if(t==='neon'){m.emissive.copy(m.color).multiplyScalar(.32);m.roughness=.7}else if(t==='metal'){m.metalness=.45;m.roughness=.5}else if(t==='champ'){m.metalness=.6;m.roughness=.35;m.emissive.setHex(0x3a2a00)}}
-function equipS(c,it){const e=save.shop.eq;if(c==='f'){const h=e.home,i=h.indexOf(it.id);if(i>=0){if(h.length>1)h.splice(i,1)}else{h.unshift(it.id);if(h.length>3)h.length=3}}else if(c==='b'){e.bg=it.id;applyBg()}else e.thr=it.id;persist()}
+const homeSlots=()=>{const h=save.shop.eq.home;while(h.length<3)h.push('');h.length=3;return h};
+const SLN=['Center (biggest)','Left','Right'];
+function placeFriend(id,slot){const h=homeSlots(),j=id?h.indexOf(id):-1;if(j>=0)h[j]=h[slot];h[slot]=id;if(!h.some(Boolean))h[0]='Kitty';persist()}
+function slotPicker(id){const h=homeSlots();showOv('Where should '+id+' go?','Pick a spot on your home screen.',SLN.map((n,i)=>({t:n+(h[i]?' - '+h[i]:' - empty'),f:()=>{placeFriend(id,i);sfx.click();shpRender()}})).concat([{t:'Cancel',l:1,f:()=>{}}]))}
+function friendPicker(slot){const o=$('#ov'),own=SHOP.f.filter(it=>sOwn('f',it)),h=homeSlots();
+ const cell=(id,nm)=>{const mi=id?MODELS.findIndex(m=>m.name===id):-1;if(mi>=0&&!thumbs[mi]){try{thumbs[mi]=mkThumb(mi)}catch(e){thumbs[mi]=BLANK}}return`<button class="cg${h[slot]===id?'':''}" data-f="${id}"><span class="pic" style="--c:#dcebf5;width:52px;height:52px">${mi>=0?`<img src="${thumbs[mi]}" style="width:100%;height:100%;object-fit:contain" alt="">`:ic('close',20,'#35506a')}</span><b>${nm}</b></button>`};
+ o.innerHTML=`<div><h2>${SLN[slot]}</h2><p>Pick who stands here.</p><div id="cgrid" style="grid-template-columns:repeat(3,1fr)">${own.map(it=>cell(it.id,it.id)).join('')}${cell('','Empty')}</div></div>`;
+ const c=document.createElement('button');c.className='big l';c.textContent='Cancel';c.onclick=()=>o.classList.add('hide');o.firstChild.appendChild(c);o.classList.remove('hide');
+ $('#cgrid').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const id=b.dataset.f;o.classList.add('hide');
+  if(!id&&h.filter(Boolean).length<=1&&h[slot]){toast('Keep at least one friend on your home screen');return}
+  placeFriend(id,slot);sfx.click();shpRender()}}
+function equipS(c,it){const e=save.shop.eq;if(c==='f'){const h=homeSlots(),i=h.indexOf(it.id);if(i>=0){if(h.filter(Boolean).length>1){h[i]=''}else toast('Keep at least one friend on your home screen')}else{slotPicker(it.id);return}}else if(c==='b'){e.bg=it.id;applyBg()}else e.thr=it.id;persist()}
 function shpRender(){
  document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins);
  $('#stabs').innerHTML=Object.keys(SHN).map(k=>`<button data-t="${k}" class="${stab===k?'on':''}">${SHN[k]}</button>`).join('');
- let h=`<p style="text-align:center;margin:6px 8px 4px;font-weight:600;color:#35506a">${stab==='f'?'Up to three friends wait on your home screen. The first one stands in the middle.':stab==='b'?'Changes the scene behind your yarn.':'Changes how your yarn looks in every level.'}</p>`;
+ let h=`<p style="text-align:center;margin:6px 8px 4px;font-weight:600;color:#35506a">${stab==='f'?'Choose who waits on your home screen and where. Tap a spot below, or tap Show on a friend.':stab==='b'?'Changes the scene behind your yarn.':'Changes how your yarn looks in every level.'}</p>`;
+ if(stab==='f'){const hs=homeSlots();h+='<div class="hslots">'+[1,0,2].map(i=>{const id=hs[i];const mi=id?MODELS.findIndex(m=>m.name===id):-1;if(mi>=0&&!thumbs[mi]){try{thumbs[mi]=mkThumb(mi)}catch(e){thumbs[mi]=BLANK}}return`<button data-sl="${i}" class="hs${i===0?' big':''}"><span>${mi>=0?`<img src="${thumbs[mi]}" alt="">`:'+'}</span><b>${['Center','Left','Right'][i]}</b><small>${id||'Empty'}</small></button>`}).join('')+'</div>'}
  h+=SHOP[stab].map(it=>{const c=stab,own=sOwn(c,it),on=sOn(c,it),pr=shopPrice(it),name=it.n||it.id;
   let sw;if(c==='f'){const mi=MODELS.findIndex(m=>m.name===it.id);if(!thumbs[mi]){try{thumbs[mi]=mkThumb(mi)}catch(e){thumbs[mi]=BLANK}}sw=`<div class="sw" style="background:#dcebf5"><img src="${thumbs[mi]}" alt=""></div>`}
   else if(c==='b')sw=`<div class="sw" style="background:${it.css}"></div>`;
@@ -4186,9 +4206,9 @@ function shpRender(){
   return`<div class="pcard">${sw}<div class="tx"><b>${name}</b><small>${d}</small></div>${btn}</div>`}).join('');
  $('#shc').innerHTML=h}
 $('#stabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){stab=b.dataset.t;shpRender()}};
-$('#shc').onclick=e=>{const b=e.target.closest('[data-si]');if(!b)return;const c=b.dataset.sc,it=SHOP[c].find(x=>x.id===b.dataset.si);if(!it)return;
+$('#shc').onclick=e=>{const sl=e.target.closest('[data-sl]');if(sl){friendPicker(+sl.dataset.sl);return}const b=e.target.closest('[data-si]');if(!b)return;const c=b.dataset.sc,it=SHOP[c].find(x=>x.id===b.dataset.si);if(!it)return;
  if(!sOwn(c,it)){const pr=shopPrice(it);if(save.coins<pr){toast(`You need ${fmtc(pr-save.coins)} more coins`);sfx.bad();return}
-  showOv('Buy '+(it.n||it.id)+'?',`<span class="stk">${ic('coin',14)} ${fmtc(pr)}</span><br>This is yours forever.`,[{t:'Buy',f:()=>{if(save.coins<pr)return;save.coins-=pr;save.shop.own[c+':'+it.id]=1;stat('buys');stat('cosm');if(c==='f'){const h=save.shop.eq.home;h.unshift(it.id);if(h.length>3)h.length=3}else if(c==='b'){save.shop.eq.bg=it.id;applyBg()}else save.shop.eq.thr=it.id;persist();sfx.coin();toast('Purchased!');shpRender()}},{t:'Not now',l:1,f:()=>{}}]);return}
+  showOv('Buy '+(it.n||it.id)+'?',`<span class="stk">${ic('coin',14)} ${fmtc(pr)}</span><br>This is yours forever.`,[{t:'Buy',f:()=>{if(save.coins<pr)return;save.coins-=pr;save.shop.own[c+':'+it.id]=1;stat('buys');stat('cosm');if(c==='f'){placeFriend(it.id,0)}else if(c==='b'){save.shop.eq.bg=it.id;applyBg()}else save.shop.eq.thr=it.id;persist();sfx.coin();toast('Purchased!');shpRender()}},{t:'Not now',l:1,f:()=>{}}]);return}
  equipS(c,it);sfx.click();shpRender()};
 function toShop(){go('shp',shpRender,'shp')}
 $('#shb').onclick=toShop;$('#pb5').onclick=()=>history.back();applyBg();
@@ -4238,15 +4258,21 @@ function hintMove(){
 const hintCost=()=>Math.max(15,r5(.6*GW()));
 function hintLabel(){const e=$('#hb em');if(save.inv.hint>0){e.textContent='Free x'+save.inv.hint;e.classList.add('fr')}else{e.innerHTML=ic('coin',13)+fmtc(hintCost());e.classList.remove('fr')}}
 let hint=null,hintRot=null;
-function clearHint(){if(hint){const l=tgtLayer(hint.p);if(l)l.m.material.emissive.setHex(0)}hint=null;hintRot=null;const m=$('#hm');if(m)m.style.display='none'}
+function clearHint(){document.querySelectorAll('#pw .pb.glow').forEach(b=>b.classList.remove('glow'));if(hint){const l=tgtLayer(hint.p);if(l)l.m.material.emissive.setHex(0)}hint=null;hintRot=null;const m=$('#hm');if(m)m.style.display='none'}
 function doHint(){
  if(scr!=='game'||over)return;if(gaunt){toast('No hints in the Gauntlet');return}const tk=save.inv.hint>0,cost=tk?0:hintCost();
  if(save.coins<cost){toast(`A hint costs ${fmtc(cost)} coins`);sfx.bad();return}
  showOv('Use a hint?',tk?`This uses 1 free hint.<br><span class="stk">${save.inv.hint} left</span>`:`<span class="stk">${ic('coin',14)} ${fmtc(cost)}</span><br>You are only charged if there is a good move to show.`,[{t:'Yes, hint',f:runHint},{t:'No thanks',l:1,f:()=>{}}])}
+let glowT=0;
 function runHint(){
  if(scr!=='game'||over)return;const tk=save.inv.hint>0,cost=tk?0:hintCost();
  if(save.coins<cost){toast(`A hint costs ${fmtc(cost)} coins`);return}
- const r=hintMove();if(!r||!r.safe){toast('No good move to suggest here. You were not charged.');sfx.bad();return}
+ const r=hintMove();
+ if(!r||!r.safe){const hf=helpFlags(),ks=Object.keys(hf).filter(k=>hf[k]);
+  if(!ks.length){if(isStuck()&&!anims.length&&!pendingC){gameOver();return}toast('No good move to suggest here. You were not charged.');sfx.bad();return}
+  if(tk)save.inv.hint--;else save.coins-=cost;stat('hints');persist();render();hintLabel();sfx.coin();clearHint();toggleTray(true);
+  document.querySelectorAll('#pw .pb').forEach(b=>b.classList.toggle('glow',ks.includes(b.dataset.b)));clearTimeout(glowT);glowT=setTimeout(()=>document.querySelectorAll('#pw .pb.glow').forEach(b=>b.classList.remove('glow')),9000);
+  toast('A power-up is your best option');return}
  if(tk)save.inv.hint--;else save.coins-=cost;stat('hints');persist();render();hintLabel();sfx.coin();clearHint();hint={p:parts[r.i],t:0};
  const q=hint.p.grp.position,from=group.rotation.y;let to=Math.hypot(q.x,q.z)>.3?Math.atan2(-q.x,q.z):from;while(to-from>Math.PI)to-=TAU;while(to-from<-Math.PI)to+=TAU;
  hintRot={f:from,t:to,fx:group.rotation.x,t0:0};spin.set(0,0);
@@ -4346,10 +4372,10 @@ function clearHome(){homeObjs.forEach(o=>scene.remove(o.g));homeObjs=[]}
  for(let i=0;i<5;i++){const sz=26+i*9;h+=`<i class="yb" style="left:${8+i*20}%;width:${sz}px;height:${sz}px;background:repeating-linear-gradient(${35+i*25}deg,${C[i]} 0 5px,${C[i+1]} 5px 10px);animation-duration:${55+i*17}s;animation-delay:${-i*13}s"></i>`}
  bg.insertAdjacentHTML('beforeend',h)})();
 function homeBuild(){
- const HM=save.shop.eq.home.map(n=>MODELS.findIndex(m=>m.name===n)).filter(i=>i>=0);while(HM.length<3)HM.push(HM[HM.length-1]);
+ const HM=homeSlots().map(n=>n?MODELS.findIndex(m=>m.name===n):-1);
  clearHome();const port=cam.aspect<.95,rng=rngf(5),pp={p1:0,p2:0,p3:0};
  const add=(mi,x,y,s,sp)=>{const m=makeModel(mi,rng,pp),w=new THREE.Group();m.g.position.y=-MODELS[mi].cy;w.add(m.g);w.position.set(x,y,0);w.scale.setScalar(s*MODELS[mi].k/1.2);w.rotation.x=.22;scene.add(w);homeObjs.push({g:w,sp,y0:y,ph:Math.random()*6})};
- if(port){add(HM[0],0,1.4,1.2,.17);add(HM[1],-2.7,-3.2,.58,-.11);add(HM[2],2.7,-3.2,.5,.26)}else{add(HM[0],0,0,1.2,.17);add(HM[1],-5.6,-.6,.8,-.11);add(HM[2],5.6,-.6,.7,.26)}
+ const A=port?[[0,1.4,1.2,.17],[-2.7,-3.2,.58,-.11],[2.7,-3.2,.5,.26]]:[[0,0,1.2,.17],[-5.6,-.6,.8,-.11],[5.6,-.6,.7,.26]];HM.forEach((mi,i)=>{if(mi>=0)add(mi,...A[i])});
  const pos=port?[[-3,3.8],[3.1,4.3],[-3.2,-.4],[3.3,.8],[0,-5.2],[-1.2,6.2]]:[[-3,2.2],[3,2.4],[-3.3,-2.6],[3.2,-2.4],[-7,2.4],[7,2.2]],cs=['R','B','Y','P','G','N'];
  pos.forEach((q,i)=>{const t=baseTex.clone();t.needsUpdate=true;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2,1.4);
   const m=new THREE.Mesh(GEO.s,new THREE.MeshStandardMaterial({color:COL[cs[i]],map:t,bumpMap:t,bumpScale:1.5,roughness:.95}));m.scale.setScalar(.42);
