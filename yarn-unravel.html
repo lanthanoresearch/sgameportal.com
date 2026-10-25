@@ -5102,7 +5102,7 @@ let last=performance.now(),tmrT=0;
 let lastAct=performance.now();['pointerdown','pointermove','wheel','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{lastAct=performance.now()},{passive:true}));
 function frame(now){
  styTick(now);const dt=Math.min(.05,(now-last)/1000);last=now;
- if(scr==='game'&&now-tmrT>250){tmrT=now;const e=$('#tmr');if(e){if(over)e.style.display='none';else{const sec=levelT0?(performance.now()-levelT0)/1000:0,par=!rmode&&!gaunt,ok=sec<=curPar;e.style.display='';e.className=(par&&!ok?'late':'')+(levelT0?' on':'');e.innerHTML=ic('clock',13,'#fff')+' '+fmtM(sec)+(par?' &nbsp;<b>'+ic('star',12,ok?'#ffd23f':'#ccc')+' '+fmtM(curPar)+'</b>':'')}}}
+ if(scr==='game'&&now-tmrT>250){tmrT=now;const e=$('#tmr');if(e){if(over||save.tmr===false)e.style.display='none';else{const sec=levelT0?(performance.now()-levelT0)/1000:0,par=!rmode&&!gaunt,ok=sec<=curPar;e.style.display='';e.className=(par&&!ok?'late':'')+(levelT0?' on':'');e.innerHTML=ic('clock',13,'#fff')+' '+fmtM(sec)+(par?' &nbsp;<b>'+ic('star',12,ok?'#ffd23f':'#ccc')+' '+fmtM(curPar)+'</b>':'')}}}
  if(scr==='home'){homeObjs.forEach(o=>{o.g.rotation.y+=dt*o.sp;if(o.ax){o.g.position.x=o.x0+Math.sin(now*o.fx+o.ph)*o.ax;o.g.position.y=o.y0+Math.cos(now*o.fy+o.ph*1.3)*o.ay+Math.sin(now*.0011+o.ph)*.08;o.g.rotation.z=Math.sin(now*.0007+o.ph)*.09}else{o.g.position.y=o.y0+Math.sin(now*(o.fq||.0008)+o.ph)*(o.am||.1);o.g.rotation.z=Math.sin(now*.0006+o.ph)*.04}})}
  else if(scr==='game'){
   if(hintRot){hintRot.t0=Math.min(1,hintRot.t0+dt/.7);const e=sm(0,1,hintRot.t0);group.rotation.y=hintRot.f+(hintRot.t-hintRot.f)*e;group.rotation.x=hintRot.fx+(.3-hintRot.fx)*e;if(hintRot.t0>=1)hintRot=null}
@@ -5222,7 +5222,7 @@ $('#lb').onclick=()=>history.back();
 function backHome(){const rnd=rmode&&!(lastO&&lastO.tr!=null)&&!gaunt;toLevels();if(rnd)setTimeout(()=>{if(rcfg)randOv()},350)}
 function confirmLeave(t,msg,f){confirming=true;showOv(t,msg,[{t:'Yes',f:()=>{confirming=false;f()}},{t:'Stay',l:1,f:()=>{confirming=false}}])}
 const backName=()=>lastO&&lastO.tr!=null?'Trail':rmode?'Random':gaunt?'Challenges':'Levels';
-function parBanner(){const o=$('#parb');if(o)o.remove();if(rmode||gaunt)return;const d=document.createElement('div');d.id='parb';d.innerHTML=`${ic('star',16,'#ffd23f')} Beat <b>${fmtM(curPar)}</b> for a star<small>The timer starts when you first touch the puzzle.</small>`;document.body.appendChild(d);setTimeout(()=>d.remove(),3700)}
+function parBanner(){const o=$('#parb');if(o)o.remove();if(rmode||gaunt||save.tmr===false)return;const d=document.createElement('div');d.id='parb';d.innerHTML=`${ic('star',16,'#ffd23f')} Beat <b>${fmtM(curPar)}</b> for a star<small>The timer starts when you first touch the puzzle.</small>`;document.body.appendChild(d);setTimeout(()=>d.remove(),3700)}
 ['pointerdown','wheel','keydown'].forEach(ev=>addEventListener(ev,()=>{if(scr==='game'&&!levelT0&&!over&&$('#ov').classList.contains('hide'))levelT0=performance.now()},true));
 const backBtn=()=>{const n=backName(),b=$('#bh');b.setAttribute('aria-label','Back to '+n);b.title='Back to '+n};
 $('#bh').onclick=()=>over?backHome():gaunt?confirmLeave('Forfeit the Gauntlet?','You only get one life today. Leaving counts as a loss.',()=>{save.gt.s=2;persist();backHome()}):confirmLeave('Back to '+backName()+'?','You will lose your progress on this level.<br>Your coins are safe.',backHome);
@@ -5241,11 +5241,11 @@ const FSE=document.documentElement,rqF=FSE.requestFullscreen||FSE.webkitRequestF
 function reqFs(){if(!rqF)return false;try{const p=rqF.call(FSE);p&&p.catch&&p.catch(()=>{})}catch(e){}return true}
 function exitFs(){const f=document.exitFullscreen||document.webkitExitFullscreen;try{const p=f&&f.call(document);p&&p.catch&&p.catch(()=>{})}catch(e){}}
 ['click','pointerup','touchend','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(save.fs&&!inFs())reqFs()},true));
-const SET=[['music','Music','Cheerful background music.'],['sfx','Sound effects','Button clicks, pops and chimes.'],['fs','Full screen','Keeps asking your device to stay in full screen.'],['vib','Vibration','A little buzz when you unravel and finish skeins.'],['hq','High quality graphics','Turn this off if the game runs slowly.']];
+const SET=[['music','Music','Cheerful background music.'],['sfx','Sound effects','Button clicks, pops and chimes.'],['fs','Full screen','Keeps asking your device to stay in full screen.'],['tmr','Show timer &amp; par time','Shows your time and the par time during levels. The timer keeps running either way.'],['vib','Vibration','A little buzz when you unravel and finish skeins.'],['hq','High quality graphics','Turn this off if the game runs slowly.']];
 function openSettings(){const o=$('#ov');
  o.innerHTML='<div><h2>Settings</h2>'+SET.map(r=>`<label class="srow"><span>${r[1]}</span><span class="sw"><input type="checkbox" data-s="${r[0]}"><i></i></span></label><p class="note">${r[2]}</p>`).join('')+'<button class="big" id="dn">Done</button></div>';
  o.classList.remove('hide');
- o.querySelectorAll('input[data-s]').forEach(c=>{const k=c.dataset.s;c.checked=!!save[k];c.onchange=()=>{
+ o.querySelectorAll('input[data-s]').forEach(c=>{const k=c.dataset.s;c.checked=k==='tmr'?save.tmr!==false:!!save[k];c.onchange=()=>{
   if(k==='fs'){if(c.checked){if(!reqFs()){c.checked=false;toast("Full screen isn't supported on this browser");return}save.fs=true}else{save.fs=false;if(inFs())exitFs()}}
   else{save[k]=c.checked;if(k==='hq'){applyQ();resize()}if(k==='music')syncMusic();if(k==='sfx'&&c.checked)sfx.click()}
   persist()}});
