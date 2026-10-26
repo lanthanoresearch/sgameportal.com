@@ -868,7 +868,7 @@ h1 em{display:block;font-style:normal;font-size:.42em;margin-top:6px;color:#e847
 .vs{width:56px;height:56px;border-radius:18px;border:4px solid #fff;box-shadow:0 4px 0 #0003,inset 0 -4px 0 #0002;position:relative;padding:0}
 .vs b{position:absolute;right:-6px;top:-8px;background:#35506a;color:#fff;border-radius:10px;font-size:12px;min-width:20px;padding:1px 4px}
 #xr.on{background:#f5a623;box-shadow:0 0 0 4px #fff,0 0 22px #f5a623}
-#prog{position:relative;width:150px;height:24px;border-radius:14px;background:#0003;box-shadow:inset 0 2px 4px #0004,0 2px 0 #fff6;overflow:hidden;text-align:center;font-weight:700;font-size:14px;line-height:24px}
+#prog{position:relative;width:100%;max-width:150px;margin:4px auto 0;height:15px;border-radius:9px;background:#0003;box-shadow:inset 0 2px 4px #0004,0 2px 0 #fff6;overflow:hidden;text-align:center;font-weight:700;font-size:11px;line-height:15px}.lv #prog span{display:block;overflow:visible}body.noprg #prog{display:none}
 #prog i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(#ff8a8e,#e8474c);transition:width .4s;border-radius:14px}
 #prog span{position:relative;text-shadow:0 1px 2px #0006}
 .tray{background:#ffffff48;border-radius:26px;padding:2px 10px;margin:4px 0 0;box-shadow:inset 0 0 0 2px #ffffff90,0 6px 14px #0002;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
@@ -948,7 +948,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .cl.buy2 s{opacity:.7;font-size:11px;font-weight:500}
 .save{display:inline-block;background:#e8474c;color:#fff;border-radius:8px;padding:0 6px;font-size:11px;font-weight:700;margin-left:4px}
 .cdn{display:flex;align-items:center;justify-content:center;gap:8px;background:#35506a;border-radius:18px;padding:10px;margin:8px 0;font-weight:700;color:#fff;box-shadow:0 4px 0 #0002}
-.cdn span{font-variant-numeric:tabular-nums;font-size:22px;color:#ffe066}
+.cdn.rdy{background:linear-gradient(#5fd35f,#2e9e4a);box-shadow:0 4px 0 #1b6a30;font-size:16px}.gnew{font-style:normal;font-size:11px;background:#5fd35f;color:#0d3a1a;border-radius:8px;padding:2px 7px;vertical-align:middle;margin-left:6px;animation:gp 1.2s ease-in-out infinite}.gaunt.ready{box-shadow:0 5px 0 #150d26,0 0 0 3px #5fd35f,0 10px 14px #0003}@keyframes gp{50%{transform:scale(1.12)}}.gaunt .gs b{font-variant-numeric:tabular-nums;color:#ffe066}.cdn span{font-variant-numeric:tabular-nums;font-size:22px;color:#ffe066}
 .stk{display:inline-flex;align-items:center;gap:4px;background:#fff3c4;color:#8a5a00;border-radius:10px;padding:2px 8px;font-size:12px;font-weight:700}
 .sec{margin:14px 4px 2px;font-weight:700;color:#4a6a80;font-size:14px;letter-spacing:.5px;text-transform:uppercase}
 .chip{display:inline-flex;align-items:center;gap:3px}
@@ -971,8 +971,8 @@ button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 <div id="hud" class="hide">
  <div class="row top"><div>
   <button class="ib" id="bh" aria-label="Back to levels"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib r" id="br" aria-label="Restart"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 3v5h-5"/></svg></button></div>
- <div class="lv"><small id="mn">Easy</small><span id="lv">Level 1</span></div><div class="coin"><span data-ic="coin" data-s="20"></span><span id="coins" class="cn">0</span></div></div>
- <div class="tray"><div class="row" id="sk"></div><div class="row" id="hd"></div></div><div class="row" style="flex-direction:column;align-items:center;gap:6px"><div id="prog"><i></i><span>0/0</span></div><em id="tmr"></em></div>
+ <div class="lv"><small id="mn">Easy</small><span id="lv">Level 1</span><div id="prog"><i></i><span>0/0</span></div></div><div class="coin"><span data-ic="coin" data-s="20"></span><span id="coins" class="cn">0</span></div></div>
+ <div class="tray"><div class="row" id="sk"></div><div class="row" id="hd"></div></div><div class="row" style="flex-direction:column;align-items:center;gap:6px"><em id="tmr"></em></div>
  <div id="dsk"></div>
 <button id="skull" style="display:none" aria-label="Give up" title="Give up"><svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C7 2 3.5 5.6 3.5 10.3c0 2.7 1.2 4.6 3 5.8V19c0 .8.6 1.5 1.5 1.5h1v-2h1.5v2h2v-2H14v2h1c.9 0 1.5-.7 1.5-1.5v-2.9c1.8-1.2 3-3.100 3-5.800C19.500 5.600 17 2 12 2zM8.600 12.800a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm6.800 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg><span>Give up</span></button>
  <div id="pwd"><button class="ib" id="pwt" aria-label="Power-ups" data-ic="bolt" data-s="32"></button><div id="pw"></div></div>
@@ -4825,7 +4825,8 @@ function chInit(){if(!save.chain.b){save.chain.b=Object.assign({},save.st);persi
 const rwChips=r=>Object.keys(r).map(k=>k==='c'?`<span class="chip">${ic('coin',13)} ${fmtc(pcv(r[k]))}</span>`:`<span class="chip"><span style="color:${B[k].c};display:inline-flex">${ic(B[k].ic,13)}</span> x${r[k]}</span>`).join('');
 let bulk=false;
 function give(r){Object.keys(r).forEach(k=>{if(k==='c')save.coins+=pcv(r[k]);else addInv(k,r[k])});persist();document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins);hintLabel();if(bulk)return;sfx.done();vib(30);confetti();toast('Prize claimed!')}
-const dlyCount=()=>{const d=dailies();let n=0;d.forEach(x=>{if((save.day.s[x.k]||0)>=x.g&&!save.day.c[x.id])n++});if(d.every(x=>save.day.c[x.id])&&!save.day.c.all)n++;return n};
+const gReady=()=>save.gt.s===0;
+const dlyCount=()=>{const d=dailies();let n=gReady()?1:0;d.forEach(x=>{if((save.day.s[x.k]||0)>=x.g&&!save.day.c[x.id])n++});if(d.every(x=>save.day.c[x.id])&&!save.day.c.all)n++;return n};
 const prCount=()=>goalSet().filter(a=>aval(a)>=a.g&&!save.claimed[a.id]).length+(chInit(),chProg()>=chStep(save.chain.i).g?1:0);
 const claimables=()=>dlyCount()+prCount();
 function prizeBadge(){const a=prCount(),b=dlyCount(),e=$('#pdot'),f=$('#ddot');if(e){e.textContent=a;e.classList.toggle('on',a>0)}if(f){f.textContent=b;f.classList.toggle('on',b>0)}}
@@ -4848,14 +4849,14 @@ function prizRender(){
   h+='</div>'}
  $('#pc').innerHTML=h;prizeBadge();
  $('#pc').style.paddingTop='';if(ptab==='road')[30,150,400].forEach(t=>setTimeout(trCenter,t))}
-function trCenter(){if(scr!=='prz'||ptab!=='road')return;const sc=$('#prz'),d=$('#trdiv'),pc=$('#pc');if(!d||!sc.clientHeight)return;pc.style.paddingTop='0px';sc.scrollTop=0;
+function trCenter(){if(scr!=='prz'||ptab!=='road')return;const sc=$('#prz'),d=$('#trdiv'),pc=$('#pc');if(!d||!sc.clientHeight)return;pc.style.paddingTop='26px';sc.scrollTop=0;
  const dt=d.getBoundingClientRect().top-sc.getBoundingClientRect().top,tg=Math.min(130,sc.clientHeight*.2);sc.scrollTop=Math.max(0,dt-tg)}
 function dlyRender(){
  document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins);const d=dailies();
  const sn=save.ds.last===today()||save.ds.last===yday()?save.ds.n:0;
- let h=`<div class="cdn">${ic('clock',22,'#fff')}New challenges in <span id="cdv">${fmtT(msLeft())}</span></div><p style="text-align:center;margin:4px 0 6px"><span class="stk">${ic('flame',14,'#e8474c')} ${sn} day streak</span></p>`;
+ let h=(gReady()?`<div class="cdn rdy">${ic('flame',22,'#fff')}Today's Gauntlet is ready to play!</div>`:`<div class="cdn">${ic('clock',22,'#fff')}Next Gauntlet in <span id="cdv">${fmtT(msLeft())}</span></div>`)+`<p style="text-align:center;margin:4px 0 6px"><span class="stk">${ic('flame',14,'#e8474c')} ${sn} day streak</span></p>`;
  const gd=gauntDay(),gs=save.gt.s===3&&scr!=='game'?2:save.gt.s;
- h+=`<div class="gaunt"><div class="gh">${ic('flame',30,'#ffb347')}<div><b>Daily Gauntlet</b><small>${(save.gt.w||0)} cleared so far</small></div></div><p>Today: <b>${MODELS[gd.L].name}</b>, the hardest setting. One life, no power-ups, no hints, and a jammed spare slot.</p>${rwChips(GRW)}${gs===0?'<button class="big" data-g="1">Enter</button>':gs===1?'<div class="gs">Cleared today. Come back at midnight.</div>':'<div class="gs">Failed today. A new one arrives at midnight.</div>'}</div>`;
+ h+=`<div class="gaunt${gs===0?' ready':''}"><div class="gh">${ic('flame',30,'#ffb347')}<div><b>Daily Gauntlet${gs===0?' <em class="gnew">READY</em>':''}</b><small>${(save.gt.w||0)} cleared so far</small></div></div><p>Today: <b>${MODELS[gd.L].name}</b>, the hardest setting. One life, no power-ups, no hints, and a jammed spare slot.</p>${rwChips(GRW)}${gs===0?'<button class="big" data-g="1">Enter</button>':gs===1?'<div class="gs">Cleared today. Next one in <b class="cdg">'+fmtT(msLeft())+'</b></div>':'<div class="gs">Failed today. Next one in <b class="cdg">'+fmtT(msLeft())+'</b></div>'}</div>`;
  {const nc=d.filter(x=>(save.day.s[x.k]||0)>=x.g&&!save.day.c[x.id]).length,cl=d.filter(x=>save.day.c[x.id]).length;h+=caBar(nc+(nc+cl===3&&!save.day.c.all&&nc>0?1:0)>=2?nc+(nc+cl===3&&!save.day.c.all?1:0):0)}
  h+=d.map(x=>card(ic('target',26),'#2fae9d',x.t,'Daily challenge',save.day.s[x.k]||0,x.g,x.rw,x.id,save.day.c[x.id])).join('');
  h+=card(ic('gift',26),'#f0a500','Finish all three','Daily bonus. Grows with your streak',d.filter(x=>save.day.c[x.id]).length,3,dall(),'all',save.day.c.all);
@@ -4985,7 +4986,7 @@ $('#prb').onclick=toPrizes;$('#pwb').onclick=toPwr;$('#dyb').onclick=toDly;$('#p
  const stop=()=>clearTimeout(tm);['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,stop,true))})();
 addEventListener('visibilitychange',()=>{if(!document.hidden){dayRoll();prizeBadge();if(scr==='dly')dlyRender();if(scr==='home')mkRender()}});
 setInterval(()=>{const m=msLeft();if(save.day.d!==today()){dayRoll();prizeBadge();if(scr==='dly')dlyRender()}
- if(scr==='home')$('#dysub').textContent=fmtT(m);else if(scr==='dly'){const e=$('#cdv');if(e)e.textContent=fmtT(m)}},1000);
+ if(scr==='home')$('#dysub').textContent=gReady()?'Gauntlet ready!':fmtT(m);else if(scr==='dly'){const e=$('#cdv');if(e)e.textContent=fmtT(m);document.querySelectorAll('.cdg').forEach(x=>x.textContent=fmtT(m))}},1000);
 /* ---------- planner: powers the hint button ---------- */
 function liveState(){
  const L=parts.map(p=>p.done?[]:p.layers.filter(l=>!l.busy).map(l=>l.col)),hi=hold.map((_,i)=>i).filter(hdU);
@@ -5157,7 +5158,7 @@ function homeBuild(){
 function show(s){scr=s;if(s==='home')try{mkRender()}catch(e){}$('#home').classList.toggle('hide',s!=='home');$('#lvls').classList.toggle('hide',s!=='lvls');$('#prz').classList.toggle('hide',s!=='prz');$('#pwr').classList.toggle('hide',s!=='pwr');$('#dly').classList.toggle('hide',s!=='dly');$('#shp').classList.toggle('hide',s!=='shp');$('#trl').classList.toggle('hide',s!=='trl');$('#hud').classList.toggle('hide',s!=='game');if(s==='game')layout();$('#ov').classList.add('hide');
  if(s!=='game'){rollsHide();clearAnims();cancelDown();clearHover();clearHint()}
  if(s==='home'){clearGroup();cam.position.z=baseZ;homeBuild()}else if(s==='lvls'||s==='prz'||s==='pwr'||s==='dly'||s==='shp'||s==='trl')clearHome();
- if(s==='home'){$('#dysub').textContent=fmtT(msLeft());prizeBadge()}
+ if(s==='home'){$('#dysub').textContent=gReady()?'Gauntlet ready!':fmtT(msLeft());prizeBadge()}
  document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins)}
 const BLANK='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',thumbs={};let thumbRT=null;
 function mkThumb(L){
@@ -5241,17 +5242,17 @@ const FSE=document.documentElement,rqF=FSE.requestFullscreen||FSE.webkitRequestF
 function reqFs(){if(!rqF)return false;try{const p=rqF.call(FSE);p&&p.catch&&p.catch(()=>{})}catch(e){}return true}
 function exitFs(){const f=document.exitFullscreen||document.webkitExitFullscreen;try{const p=f&&f.call(document);p&&p.catch&&p.catch(()=>{})}catch(e){}}
 ['click','pointerup','touchend','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(save.fs&&!inFs())reqFs()},true));
-const SET=[['music','Music','Cheerful background music.'],['sfx','Sound effects','Button clicks, pops and chimes.'],['fs','Full screen','Keeps asking your device to stay in full screen.'],['tmr','Show timer &amp; par time','Shows your time and the par time during levels. The timer keeps running either way.'],['vib','Vibration','A little buzz when you unravel and finish skeins.'],['hq','High quality graphics','Turn this off if the game runs slowly.']];
+const SET=[['music','Music','Cheerful background music.'],['sfx','Sound effects','Button clicks, pops and chimes.'],['fs','Full screen','Keeps asking your device to stay in full screen.'],['tmr','Show timer &amp; par time','Shows your time and the par time during levels. The timer keeps running either way.'],['prg','Show level progress','The small count under the level name, like 12/48 pieces unraveled.'],['vib','Vibration','A little buzz when you unravel and finish skeins.'],['hq','High quality graphics','Turn this off if the game runs slowly.']];
 function openSettings(){const o=$('#ov');
  o.innerHTML='<div><h2>Settings</h2>'+SET.map(r=>`<label class="srow"><span>${r[1]}</span><span class="sw"><input type="checkbox" data-s="${r[0]}"><i></i></span></label><p class="note">${r[2]}</p>`).join('')+'<button class="big" id="dn">Done</button></div>';
  o.classList.remove('hide');
- o.querySelectorAll('input[data-s]').forEach(c=>{const k=c.dataset.s;c.checked=k==='tmr'?save.tmr!==false:!!save[k];c.onchange=()=>{
+ o.querySelectorAll('input[data-s]').forEach(c=>{const k=c.dataset.s;c.checked=(k==='tmr'||k==='prg')?save[k]!==false:!!save[k];c.onchange=()=>{
   if(k==='fs'){if(c.checked){if(!reqFs()){c.checked=false;toast("Full screen isn't supported on this browser");return}save.fs=true}else{save.fs=false;if(inFs())exitFs()}}
-  else{save[k]=c.checked;if(k==='hq'){applyQ();resize()}if(k==='music')syncMusic();if(k==='sfx'&&c.checked)sfx.click()}
+  else{save[k]=c.checked;if(k==='hq'){applyQ();resize()}if(k==='prg')document.body.classList.toggle('noprg',!c.checked);if(k==='music')syncMusic();if(k==='sfx'&&c.checked)sfx.click()}
   persist()}});
  $('#dn').onclick=()=>o.classList.add('hide');
  }
 $('#gear').onclick=openSettings;
 $('#xr').onclick=()=>{if(scr!=='game'||over)return;xray=!xray;$('#xr').classList.toggle('on',xray);applyXray();vib(8)};
-addEventListener('resize',resize);resize();dayRoll();prizeBadge();show('home');mkLabel();setTimeout(mkPopup,900);requestAnimationFrame(frame);
+addEventListener('resize',resize);resize();dayRoll();prizeBadge();show('home');mkLabel();setTimeout(mkPopup,900);requestAnimationFrame(frame);document.body.classList.toggle('noprg',save.prg===false);
 </script></body></html>
