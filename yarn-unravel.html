@@ -802,7 +802,7 @@ h1 em{display:block;font-style:normal;font-size:.42em;margin-top:6px;color:#e847
 .lb.lk .th{filter:grayscale(.35)}
 .lb b{position:absolute;left:5px;top:4px;font-size:12px;line-height:1;background:#0000005a;border-radius:8px;padding:2px 5px}
 .lb span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:9.5px;font-weight:500;line-height:1.1;margin-top:3px}
-.lb .inf{text-shadow:none;right:auto;position:absolute;left:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#fffffff0;color:#35506a;font:800 14px/22px Fredoka,system-ui,sans-serif;font-style:normal;text-align:center;box-shadow:0 2px 0 #0003;z-index:2;cursor:pointer}.lb .inf::after{content:'';position:absolute;inset:-8px}.lb .inf:active{transform:scale(.9)}
+
 .lb u{position:absolute;right:5px;top:3px;font-size:11px;text-decoration:none}
 .lb.nx{animation:pulse 1.3s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.07)}}
@@ -5188,17 +5188,13 @@ function lvTime(L){const b=save.best&&save.best[L],i=save.info&&save.info[L];
  return i&&i.v===LVI_V?`<em class="lt par" data-lt="${L}">${fmtM(i.par)}</em>`:`<em class="lt par" data-lt="${L}"></em>`}
 function fillTimes(){let L=0;const step=()=>{if(scr!=='lvls'||L>=NBASE)return;let k=0;while(L<NBASE&&k<3){const st=save.info&&save.info[L];if(!(st&&st.v===LVI_V)){try{lvlStats(L)}catch(e){}k++;const e=document.querySelector('[data-lt="'+L+'"]');if(e&&!(save.best&&save.best[L])){e.textContent=fmtM(save.info[L].par)}}L++}
   if(L<NBASE)setTimeout(step,24);else persist()};setTimeout(step,200)}
-function lvlInfo(L){const st=lvlStats(L),t=Math.min(11,L/5|0),b=save.best&&save.best[L],o=$('#ov'),done=save.done[L],star=save.stars[L];let reach=0;while(save.done[reach])reach++;const open=L<=reach||done||save.unlAll;
+function lvlInfo(L,force){const st=lvlStats(L),t=Math.min(11,L/5|0),b=save.best&&save.best[L],o=$('#ov'),done=save.done[L],star=save.stars[L];let reach=0;while(save.done[reach])reach++;const open=force||L<=reach||done||save.unlAll;
  const cell=(ic_,k,v,x)=>`<div class="lvc"><span>${ic(ic_,18,'#6a8296')}</span><b${x?` class="${x}"`:''}>${v}</b><small>${k}</small></div>`;
  o.innerHTML=`<div class="lvi"><div class="lvh"><img src="${thumbFor(L)}" alt=""><div><h2>${MODELS[L].name}</h2><span class="bdg" style="background:${TCOL[t]}">${TIERS[t]}</span> <small>Level ${L+1}</small></div></div>
  <div class="lvg">${cell('puzzle','Pieces',st.pieces)}${cell('layers','Yarn layers',st.layers)}${cell('palette','Colors',st.colors)}${cell('clock','Par time',fmtM(st.par))}${cell('trophy','Best time',b?fmtM(b):'--',b&&b<=st.par?'gd':'')}${cell('star','Star',star?'Earned':'Not yet',star?'gd':'')}</div>
  <p class="note" style="text-align:center">Clear every layer before your spare slots fill up. Finish within par for a star.</p></div>`;
  const mk=(t,l,f)=>{const e=document.createElement('button');e.className='big'+(l?' l':'');e.textContent=t;e.onclick=f;o.firstChild.appendChild(e)};
- if(open)mk('Play',0,()=>{o.classList.add('hide');startLevel(L)});mk('Close',1,()=>o.classList.add('hide'));o.classList.remove('hide');sfx.click();vib(18)}
-let lpT=0,lpHit=0;
-$('#ll').addEventListener('pointerdown',e=>{if(e.target.closest('.inf'))return;const b=e.target.closest('.lb');if(!b)return;clearTimeout(lpT);lpHit=0;lpT=setTimeout(()=>{lpHit=1;lvlInfo(+b.dataset.l)},430)});
-['pointerup','pointercancel','pointerleave','scroll'].forEach(ev=>$('#ll').addEventListener(ev,()=>clearTimeout(lpT),true));
-$('#lvls').addEventListener('scroll',()=>clearTimeout(lpT),{passive:true});
+ mk('Play',0,()=>{o.classList.add('hide');startLevel(L)});mk('Close',1,()=>o.classList.add('hide'));o.classList.remove('hide');sfx.click();vib(18)}
 $('#ll').addEventListener('contextmenu',e=>e.preventDefault());
 function lvlRender(){
  document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins);
@@ -5207,10 +5203,10 @@ function lvlRender(){
  $('#ll').innerHTML=TIERS.map((n,t)=>{let dn=0,st=0;for(let j=0;j<5;j++){if(save.done[t*5+j])dn++;if(save.stars[t*5+j])st++}
   const stars=[0,1,2,3,4].map(k=>ic('star',17,k<st?'#ffd23f':'#d3dbe3')).join('');
   return`<section class="tier${st===5?' perfect':''}" style="--c:${TCOL[t]}"><h3>${n} <small>${dn}/5 done</small><span class="stars" title="${st} of 5 stars">${stars}</span></h3><div class="lr">${[0,1,2,3,4].map(j=>{const L=t*5+j,d=save.done[L],cls=d?(save.stars[L]?' ok st':' ok'):L===reach?' nx':!un(L)?' lk':'';
-   return`<button class="lb${cls}" data-l="${L}"><img class="th" id="t${L}" alt="" src="${thumbs[L]||BLANK}"><b>${L+1}</b><span>${MODELS[L].name}</span>${lvTime(L)}<i class="inf" data-info="${L}" role="button" aria-label="Level ${L+1} details">i</i>${d?`<i>${save.stars[L]?ic('star',16,'#ffe066'):ic('check',15,'#fff')}</i>`:''}${!un(L)&&!d?`<u>${ic('lock',12,'#fff')}</u>`:''}</button>`}).join('')}</div></section>`}).join('');
+   return`<button class="lb${cls}" data-l="${L}"><img class="th" id="t${L}" alt="" src="${thumbs[L]||BLANK}"><b>${L+1}</b><span>${MODELS[L].name}</span>${lvTime(L)}${d?`<i>${save.stars[L]?ic('star',16,'#ffe066'):ic('check',15,'#fff')}</i>`:''}${!un(L)&&!d?`<u>${ic('lock',12,'#fff')}</u>`:''}</button>`}).join('')}</div></section>`}).join('');
 }
-$('#ll').onclick=e=>{const f=e.target.closest('.inf');if(f){e.stopPropagation();lpHit=0;lvlInfo(+f.dataset.info);return}if(lpHit){lpHit=0;return}const b=e.target.closest('button');if(!b||!b.dataset.l)return;const L=+b.dataset.l;let reach=0;while(save.done[reach])reach++;
- if(L<=reach||save.done[L]||save.unlAll)startLevel(L);else showOv('Are you sure?',`Level ${L+1} isn't unlocked yet.<br>Beat the earlier levels first, or jump in anyway?`,[{t:'Play anyway',f:()=>startLevel(L)},{t:'Cancel',l:1,f:()=>{}}])};
+$('#ll').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.l)return;const L=+b.dataset.l;let reach=0;while(save.done[reach])reach++;
+ if(L<=reach||save.done[L]||save.unlAll)lvlInfo(L);else showOv('Are you sure?',`Level ${L+1} isn't unlocked yet.<br>Beat the earlier levels first, or jump in anyway?`,[{t:'Play anyway',f:()=>setTimeout(()=>lvlInfo(L,1),60)},{t:'Cancel',l:1,f:()=>{}}])};
 function toLevels(){if(scr==='game'){skip=true;history.back()}else{history.pushState({s:'lvls'},'');lvlRender();show('lvls')}}
 const word='Yarn Unravel'.split(' '),cl=['#e8474c','#f5a623','#78c850','#3b78e0','#9150c8','#e8474c'];let ci=0;
 $('#ti').innerHTML=word.map(w=>[...w].map(ch=>`<span style="--c:${cl[ci%6]};--d:${(ci++*.15).toFixed(2)}s">${ch}</span>`).join('')).join('<br>').replace('<br>','<br><em>').replace(/$/,'');
