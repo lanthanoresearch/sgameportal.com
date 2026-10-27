@@ -2887,7 +2887,7 @@ window.SG_WORDS = {
 .sg-tab:hover{ color:#fff; background:rgba(255,255,255,.06); }
 .sg-tab[aria-selected="true"]{ color:#fff; border-bottom-color:#ffd54a; background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.14)); }
 .sg-tab:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
-.sg-body[data-tab="layout"] [data-tab="data"], .sg-body[data-tab="data"] [data-tab="layout"], .sg-body[data-tab="sort"] [data-tab="layout"], .sg-body[data-tab="sort"] [data-tab="data"], .sg-body[data-tab="layout"] [data-tab="sort"], .sg-body[data-tab="data"] [data-tab="sort"]{ display:none !important; }
+.sg-body[data-tab="layout"] [data-tab="data"], .sg-body[data-tab="layout"] [data-tab="general"], .sg-body[data-tab="general"] [data-tab="layout"], .sg-body[data-tab="general"] [data-tab="data"], .sg-body[data-tab="data"] [data-tab="layout"], .sg-body[data-tab="data"] [data-tab="general"]{ display:none !important; }
 
 /* Diamonds: the Levels chip puts its "23 / 100" on its own line so it always fits */
 #diamondsLevels{ white-space:nowrap !important; }
@@ -2965,6 +2965,24 @@ window.SG_WORDS = {
 .sg-scope .sort-tabs{margin:2px 0 6px}.sg-scope .sort-tabs[hidden]{display:none}.sg-scope .row:first-of-type{border-top:0;margin-top:0}.sg-scope .row{border-top:1px solid rgba(255,255,255,.14);margin-top:6px}
 .sg-scope .t small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 .sg-glob{margin-top:26px;padding-top:6px;border-top:2px solid rgba(255,255,255,.22)}.sg-glob .sg-note{margin:0}
+</style>
+<style id="parts-css">
+.sg-part{margin-top:34px !important;padding:14px 0 0;border-top:2px solid rgba(255,255,255,.22)}
+.sg-part h2{margin:0;font:900 26px/1.05 var(--wlui,system-ui);letter-spacing:.02em;color:#fff;display:flex;align-items:center;gap:10px}
+.sg-part h2::before{content:"";width:6px;height:26px;border-radius:3px;background:linear-gradient(#ffd54a,#5cc8fb)}
+.sg-part p{margin:6px 0 0;font:600 14px/1.35 var(--wlui,system-ui);color:#b7cdf5}
+#secScreen>h3,#secSound>h3,#secFamily>h3,#hReset,#hStatsReset{font:900 22px/1.1 var(--wlui,system-ui);letter-spacing:.02em;text-transform:none;color:#fff;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+#secScreen>h3::before,#secSound>h3::before,#secFamily>h3::before,#hReset::before,#hStatsReset::before{content:"";width:6px;height:22px;border-radius:3px;background:linear-gradient(#ffd54a,#5cc8fb)}
+#secScreen,#secSound,#secFamily{margin-top:26px}
+</style>
+<style id="ordsec-css">
+#sgOrder .ord-sec{margin:12px 0 0;padding:10px 10px 4px;border-radius:16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.2);border-left:6px solid #5cc8fb}
+#sgOrder .ord-sec:nth-child(2n){border-left-color:#ffd54a}#sgOrder .ord-sec:nth-child(3n){border-left-color:#ff8fd0}#sgOrder .ord-sec:nth-child(4n){border-left-color:#7be0a4}#sgOrder .ord-sec:nth-child(5n){border-left-color:#c79bff}
+#sgOrder .ord-sec h4{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 2px;font:900 17px/1.2 var(--wlui,system-ui);letter-spacing:.02em;text-transform:none;color:#fff}
+#sgOrder .ord-sec h4 .cnt{flex:none;font:800 11px/1 var(--wlui,system-ui);letter-spacing:.08em;text-transform:uppercase;color:#10294f;background:#fff;border-radius:999px;padding:5px 9px}
+#sgOrder .ord-sec .sd{margin:0 0 8px;font:500 12.5px/1.3 var(--wlui,system-ui);color:#b7cdf5}
+#sgOrder .ord-sec .ord-list{margin-bottom:8px}
+#sgOrder.ord-static .grip,#sgOrder.ord-static .mv{display:none !important}
 </style>
 <body>
   <header class="brand"><h1 aria-label="S Games Portal"><span class="sbadge" aria-hidden="true">S</span><span class="bt" aria-hidden="true"><span class="b1">GAMES</span><span class="b2">PORTAL</span></span></h1></header>
@@ -3081,9 +3099,10 @@ window.SG_WORDS = {
   <dialog class="sg-dlg" id="dlgSettings" aria-labelledby="sgTitle">
     <div class="sg-card">
       <div class="sg-head"><h2 id="sgTitle">Settings</h2><button class="sg-x" id="sgClose" type="button" aria-label="Close settings">&#10005;</button></div>
-      <div class="sg-tabs" role="tablist" aria-label="Settings sections"><button class="sg-tab" id="tabLayout" role="tab" type="button" aria-selected="true" aria-controls="sgBody">Layout</button><button class="sg-tab" id="tabSort" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Sorting</button><button class="sg-tab" id="tabData" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Data</button></div>
+      <div class="sg-tabs" role="tablist" aria-label="Settings sections"><button class="sg-tab" id="tabLayout" role="tab" type="button" aria-selected="true" aria-controls="sgBody">Layout</button><button class="sg-tab" id="tabGeneral" role="tab" type="button" aria-selected="false" aria-controls="sgBody">General</button><button class="sg-tab" id="tabData" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Data</button></div>
       <div class="sg-body" id="sgBody" data-tab="layout">
         <section class="sg-sec scope" data-tab="layout" aria-label="Which collection you are editing"><div class="sg-scope"><h3>Collection</h3><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div><div class="row"><div class="t">Same settings for both<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same settings for Classic and New"><span></span></label></div></div></section>
+        <section class="sg-sec sg-part" data-tab="layout" id="partLook"><h2>Appearance</h2><p>How the games look on the page.</p></section>
         <section class="sg-sec" data-tab="layout" aria-labelledby="hLayout">
           <h3 id="hLayout">Layout</h3>
           <div class="layouts" id="sgLayouts" role="radiogroup" aria-label="How the games are shown"></div>
@@ -3098,18 +3117,18 @@ window.SG_WORDS = {
           <h4 class="sg-sub">Buttons</h4>
           <div class="row"><div class="t">Share buttons<small id="shareNote">A share button on each game card</small></div><label class="sw"><input type="checkbox" id="swShare" aria-label="Share buttons"><span></span></label></div>
         </section>
-        <section class="sg-sec sg-glob" data-tab="layout"><h3>Everywhere</h3><p class="sg-note">These apply to the whole portal, whichever collection you are on.</p></section>
-        <section class="sg-sec" data-tab="layout" id="secScreen" aria-labelledby="hScreen">
+        <section class="sg-sec sg-glob" data-tab="general"><p class="sg-note">Settings for the portal page itself. They apply to everything here, whichever collection you are on.</p></section>
+        <section class="sg-sec" data-tab="general" id="secScreen" aria-labelledby="hScreen">
           <h3 id="hScreen">Screen</h3>
           <div class="row" id="rowIdxFs"><div class="t">Fullscreen: this page<small>The portal stays full screen until you leave it</small></div><label class="sw"><input type="checkbox" id="swFs" aria-label="Fullscreen on this page"><span></span></label></div>
           <div class="row"><div class="t">Fullscreen: all games<small>Turns fullscreen on or off in every game&rsquo;s own settings</small></div><label class="sw"><input type="checkbox" id="swGamesFs" aria-label="Fullscreen in all games"><span></span></label></div>
         </section>
-        <section class="sg-sec" data-tab="layout" id="secSound" aria-labelledby="hSound">
+        <section class="sg-sec" data-tab="general" id="secSound" aria-labelledby="hSound">
           <h3 id="hSound">Sound</h3>
           <div class="row"><div class="t">Show mute button</div><label class="sw"><input type="checkbox" id="swMuteBtn" aria-label="Show mute button" checked><span></span></label></div>
           <div class="row" id="rowHidMute"><div class="t">Mute all sounds while the button is hidden</div><label class="sw"><input type="checkbox" id="swHidMute" aria-label="Mute all sounds while the button is hidden"><span></span></label></div>
         </section>
-        <section class="sg-sec" data-tab="layout" id="secFamily" aria-labelledby="hFamily">
+        <section class="sg-sec" data-tab="general" id="secFamily" aria-labelledby="hFamily">
           <h3 id="hFamily">Family friendly mode</h3>
           <div class="sort-tabs" role="radiogroup" aria-label="Family friendly mode">
             <button type="button" role="radio" data-fam="off" aria-checked="true" aria-selected="true">Off</button>
@@ -3117,8 +3136,8 @@ window.SG_WORDS = {
           </div>
           <div class="row" id="rowLetter"><div class="t">Show the first letter of hidden words</div><label class="sw"><input type="checkbox" id="swLetter" aria-label="Show the first letter of hidden words" checked><span></span></label></div>
         </section>
-        <section class="sg-sec scope" data-tab="sort" aria-label="Which collection you are editing"><div class="sg-scope"><h3>Collection</h3><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div><div class="row"><div class="t">Same settings for both<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same settings for Classic and New"><span></span></label></div></div></section>
-        <section class="sg-sec" data-tab="sort" aria-labelledby="hGroupBy">
+        <section class="sg-sec sg-part" data-tab="layout" id="partGroups"><h2>Groups</h2><p>Split the page into titled sections of games, and choose which section comes first.</p></section>
+        <section class="sg-sec" data-tab="layout" aria-labelledby="hGroupBy">
           <h3 id="hGroupBy">Group by</h3>
           <p class="sg-note">Split the page into titled sections of games.</p>
           <div class="sort-tabs grp-tabs" role="tablist" aria-label="Group games by">
@@ -3129,13 +3148,14 @@ window.SG_WORDS = {
             <button type="button" role="tab" data-g="custom" aria-selected="false">Custom</button>
           </div>
         </section>
-        <section class="sg-sec" data-tab="sort" id="secGroups" aria-labelledby="hGroups">
+        <section class="sg-sec" data-tab="layout" id="secGroups" aria-labelledby="hGroups">
           <h3 id="hGroups">Groups</h3>
           <p class="sg-note" id="grpNote"></p>
           <ul class="ord-list" id="groupCards" aria-label="Groups, in the order they appear"></ul>
           <button type="button" class="sg-b add-group" id="editGroups">Edit groups&hellip;</button>
         </section>
-        <section class="sg-sec" data-tab="sort" aria-labelledby="hSortBy">
+        <section class="sg-sec sg-part" data-tab="layout" id="partSort"><h2>Sorting</h2><p>Choose how the games are ordered, then arrange them yourself or by name.</p></section>
+        <section class="sg-sec" data-tab="layout" aria-labelledby="hSortBy">
           <h3 id="hSortBy">Sort by</h3>
           <p class="sg-note" id="sortNote"></p>
           <div class="sort-tabs" role="tablist" aria-label="Sort games">
@@ -3144,7 +3164,7 @@ window.SG_WORDS = {
           </div>
           <ul class="ord-list" id="sortCards" aria-label="Alphabetical direction"></ul>
         </section>
-        <section class="sg-sec" data-tab="sort" id="secOrder" aria-labelledby="hOrder">
+        <section class="sg-sec" data-tab="layout" id="secOrder" aria-labelledby="hOrder">
           <h3 id="hOrder">Custom order of the games</h3>
           <p class="sg-note" id="ordNote">Drag the handle to rearrange, or use the arrows. Use a game&rsquo;s switch to show or hide its whole card.</p>
           <div id="sgOrder"></div>
@@ -3495,12 +3515,13 @@ window.SG_WORDS = {
   var fsUserExited = false, fsOwn = false, fsPending = false;
   function fsActive(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
   function fsEnter(){
-    if (!state.indexFs || !FS_OK || fsActive() || fsPending || fsUserExited) return;
+    if (!state.indexFs || !FS_OK || fsActive() || fsPending) return;
     var el = document.documentElement, f = el.requestFullscreen || el.webkitRequestFullscreen; if (!f) return;
     try{ fsPending = true; var r = f.call(el, {navigationUI:'hide'}); if (r && r.finally) r.finally(function(){ fsPending = false; }); else setTimeout(function(){ fsPending = false; }, 700); if (r && r.catch) r.catch(function(){}); }catch(e){ fsPending = false; }
   }
   function fsExit(){ if (!fsActive()) return; fsOwn = true; try{ (document.exitFullscreen || document.webkitExitFullscreen).call(document); }catch(e){ fsOwn = false; } }
-  function onFs(){ if (!fsActive() && !fsOwn) fsUserExited = true; fsOwn = false; }      // you left it yourself (Esc, swipe, back): we stop asking
+  function onFs(){ fsOwn = false; }      // fullscreen on = we keep asking on your next tap or key press, even after you leave it; fullscreen off = we leave it alone
+  if (!state.indexFs && fsActive()) fsExit();
   document.addEventListener('fullscreenchange', onFs); document.addEventListener('webkitfullscreenchange', onFs);
   ['click','keydown','pointerup','touchend'].forEach(function(ev){
     document.addEventListener(ev, function(e){
@@ -3532,9 +3553,9 @@ window.SG_WORDS = {
   function refreshLayouts(){ [].forEach.call($('sgLayouts').children, function(b){ b.setAttribute('aria-checked', String(b.dataset.v === state.layout)); }); }
 
   var lastTab = 'layout';
-  function setTab(t){ lastTab = t; $('sgBody').setAttribute('data-tab', t); $('tabLayout').setAttribute('aria-selected', t === 'layout'); $('tabSort').setAttribute('aria-selected', t === 'sort'); $('tabData').setAttribute('aria-selected', t === 'data'); $('sgBody').scrollTop = 0; }
+  function setTab(t){ if (t === 'sort') t = 'layout'; lastTab = t; $('sgBody').setAttribute('data-tab', t); $('tabLayout').setAttribute('aria-selected', t === 'layout'); $('tabGeneral').setAttribute('aria-selected', t === 'general'); $('tabData').setAttribute('aria-selected', t === 'data'); $('sgBody').scrollTop = 0; }
   $('tabLayout').addEventListener('click', function(){ setTab('layout'); });
-  $('tabSort').addEventListener('click', function(){ setTab('sort'); });
+  $('tabGeneral').addEventListener('click', function(){ setTab('general'); });
   $('tabData').addEventListener('click', function(){ setTab('data'); });
   function refreshSwitches(){
     $('swFs').checked = !!state.indexFs; $('rowIdxFs').hidden = !FS_OK; $('swGamesFs').checked = !!state.fullscreen;
@@ -3767,8 +3788,8 @@ window.SG_WORDS = {
   function refreshSort(){
     var c = sortMode() === 'custom', gr = state.group !== 'none';
     $('stCustom').setAttribute('aria-selected', c); $('stAlpha').setAttribute('aria-selected', !c);
-    $('secOrder').classList.toggle('sg-off', !c);
-    $('ordNote').textContent = 'Drag the handle to rearrange, or use the arrows' + (gr ? ', inside each group' : '') + '. Use a game\u2019s switch to show or hide its whole card.';
+    $('hOrder').textContent = c ? 'Custom order of the games' : 'How your games will appear'; $('sgOrder').classList.toggle('ord-static', !c);
+    $('ordNote').textContent = c ? ('Drag the handle to rearrange, or use the arrows' + (gr ? '. Games stay inside their own group, so you are only ordering what is already there' : '') + '. Use a game\u2019s switch to show or hide its card.') : ('Alphabetical, ' + (gr ? 'inside each of your groups, exactly as the page shows them' : 'for the whole list') + '. Switch to Custom above to arrange them yourself.');
     [].forEach.call(document.querySelectorAll('.grp-tabs button'), function(b){ b.setAttribute('aria-selected', b.dataset.g === state.group); });
     var N = { length:'Quick Games are just play, the same every time. Progress Games are long, with a goal, a story, or saved progress.', comp:'Games focused on playing against a computer opponent, and games that are just you.', endless:'Games with no real ending, and games with a goal or finish line to reach.', custom:'Make your own groups (up to five). Name them, add a description, and choose which games go in each.' };
     $('grpNote').textContent = (N[state.group] || '') + ' Use the arrows to choose which group comes first.';
@@ -3829,10 +3850,11 @@ window.SG_WORDS = {
   }
   function buildOrder(){
     list.innerHTML = '';
-    var defs = groupDefs(), secs = defs.length ? defs.map(function(gd){ return { name:gd.name, desc:gd.desc, ids:curOrder().filter(function(id){ return kindOf(id) === gd.key; }) }; }).filter(function(x){ return x.ids.length; }) : [{ ids:curOrder() }];
+    var defs = groupDefs(), alpha = sortMode() === 'alpha';
+    var secs = defs.length ? defs.map(function(gd){ var ids = curOrder().filter(function(id){ return kindOf(id) === gd.key; }); return { name:gd.name, desc:gd.desc, ids:alpha ? sortedIds(ids, state.group + '.' + gd.key) : ids }; }).filter(function(x){ return x.ids.length; }) : [{ name:'All your games', ids:alpha ? sortedIds(curOrder(), 'all') : curOrder() }];
     secs.forEach(function(sec){
     var sd = el('div', 'ord-sec'), ul = el('ul', 'ord-list');
-    if (sec.name){ var hh = el('h4', null, sec.name); if (sec.desc) hh.appendChild(el('small', null, sec.desc)); sd.appendChild(hh); }
+    if (sec.name){ var hh = el('h4', null); hh.appendChild(el('span', 'nm', sec.name)); hh.appendChild(el('span', 'cnt', sec.ids.length + (sec.ids.length === 1 ? ' game' : ' games'))); sd.appendChild(hh); if (sec.desc) sd.appendChild(el('p', 'sd', sec.desc)); }
     sd.appendChild(ul); list.appendChild(sd);
     sec.ids.forEach(function(id){
       var g = byId[id], li = document.createElement('li'); li.className = 'ord'; li.dataset.id = id;
@@ -4016,7 +4038,7 @@ window.SG_WORDS = {
     try{ localStorage.setItem(VK, JSON.stringify(v)); }catch(e){ return; }
     if (!due) return;
     $('tipOk').addEventListener('click', function(){ shut(tip); });
-    $('tipLook').addEventListener('click', function(){ shut(tip); openSettings(); setTab('sort'); });
+    $('tipLook').addEventListener('click', function(){ shut(tip); openSettings(); setTab('layout'); });
     setTimeout(function(){ if (!dlg.open && !cf.open) open(tip); }, 900);
   })();
   function settingsExit(){
@@ -4157,7 +4179,7 @@ if ('serviceWorker' in navigator) {
 .st-chart.tall{ height:150px; }
 .st-chart div{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
 .st-chart i{ display:block; width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,#ffd54a,#5cc8fb); min-height:2px; }
-.st-chart small{ font:700 10px/1 var(--wlui); color:var(--st-dim); margin-top:4px; white-space:nowrap; }
+.st-chart small{ flex:none; display:flex; justify-content:center; width:100%; height:14px; margin-top:4px; font:700 10px/14px var(--wlui); color:var(--st-dim); white-space:nowrap; overflow:visible; }
 .st-split{ display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin-top:6px; }
 .st-donut{ width:150px; height:150px; border-radius:50%; flex:0 0 auto; position:relative; }
 .st-donut::after{ content:""; position:absolute; inset:28px; border-radius:50%; background:#0a2f78; }
@@ -4213,7 +4235,7 @@ if ('serviceWorker' in navigator) {
     <div class="sg-head"><h2 id="stTitle">Play stats</h2><button class="sg-x" id="stClose" type="button" aria-label="Close play stats">&#10005;</button></div>
     <div class="sg-tabs" role="tablist" aria-label="Play stats sections" id="stTabs"></div>
     <div class="sg-body" id="stBody"></div>
-    <div class="sg-foot"><button class="sg-b" id="stExport" type="button">Download my stats</button><button class="sg-b solid" id="stDone" type="button">Done</button></div>
+    <div class="sg-foot"><button class="sg-b solid" id="stDone" type="button">Done</button></div>
   </div>
 </dialog>
 <script id="stats-ui">
@@ -4466,7 +4488,7 @@ if ('serviceWorker' in navigator) {
     habits:function(st, c){
       function chart(title, vals, labels, fmt, tall){
         var s = sec(title), max = Math.max.apply(null, vals.concat([1])), ch = el('div', 'st-chart' + (tall ? ' tall' : ''));
-        vals.forEach(function(v, i){ var col = el('div'), b = el('i'); b.style.height = (v / max * 100) + '%'; b.title = labels[i] + ': ' + fmt(v); col.appendChild(b); col.appendChild(el('small', '', labels[i])); ch.appendChild(col); });
+        vals.forEach(function(v, i){ var col = el('div'), b = el('i'); b.style.height = 'calc((100% - 18px) * ' + (v / max) + ')'; b.title = labels[i] + ': ' + fmt(v); col.appendChild(b); col.appendChild(el('small', '', labels[i])); ch.appendChild(col); });
         s.appendChild(ch); return s;
       }
       var T = c.total || 1;
@@ -4619,7 +4641,7 @@ if ('serviceWorker' in navigator) {
       var LN = { site:'Site settings and stats', other:'Other' };
       ids.forEach(function(g){ brow(s3, (NAMES[g] || LN[g] || g) + '  (' + counts[g] + (counts[g] === 1 ? ' item)' : ' items)'), sz(sizes[g]), sizes[g] / sm, COLORS[g]); });
       row(s3, 'Total used', sz(totalB) + ' in ' + totalN + ' items'); row(s3, 'Roughly how full the browser allowance is', pct(totalB, 5 * 1048576));
-      body.appendChild(el('p', 'st-note', 'To clear the play stats, open Settings and go to Saved data. Download my stats (below) saves a copy first.'));
+      body.appendChild(el('p', 'st-note', 'To clear the play stats, open Settings and go to Saved data. Settings has a Download my stats button that saves a copy first.'));
     }
   };
 
@@ -4651,10 +4673,24 @@ if ('serviceWorker' in navigator) {
   dlg.addEventListener('click', function(e){ if (e.target === dlg) closeStats(); });
   document.getElementById('stClose').addEventListener('click', closeStats);
   document.getElementById('stDone').addEventListener('click', closeStats);
-  document.getElementById('stExport').addEventListener('click', function(){
+  /* Download: a standalone web page with every stats tab exactly as it looks here (charts, tiles, tables), opens in any browser, works offline. */
+  function exportHtml(){
     var st = load(); if (!st) return;
-    try { var blob = new Blob([JSON.stringify(st, null, 2)], { type:'application/json' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'play-stats-' + dkey(new Date()) + '.json'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500); } catch (e) {}
-  });
+    var keepTab = S.tab, keepScroll = body.scrollTop, parts = [];
+    try{
+      TABS.forEach(function(t){ S.tab = t[0]; render(); var h = body.innerHTML; if (h) parts.push('<section class="x-sec"><h2 class="x-h">' + t[1] + '</h2>' + h + '</section>'); });
+    }finally{ S.tab = keepTab; render(); body.scrollTop = keepScroll; }
+    var css = (document.getElementById('stats-css') || {}).textContent || '', when = new Date();
+    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My play stats - ' + dkey(when) + '</title><style>'
+      + ':root{--wlui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif}*{box-sizing:border-box}html,body{margin:0}body{background:linear-gradient(180deg,#0a2a73,#061a4a 60%,#04123a);min-height:100vh;color:#fff;font-family:var(--wlui);padding:24px 14px 60px}'
+      + '.x-wrap{max-width:820px;margin:0 auto}.x-top h1{margin:0;font:900 clamp(30px,7vw,46px)/1.05 var(--wlui);letter-spacing:-.01em}.x-top p{margin:6px 0 22px;color:#9fb6de;font:600 15px/1.3 var(--wlui)}'
+      + '.x-sec{margin:0 0 28px;padding:18px 18px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16)}.x-h{margin:0 0 4px;font:800 14px/1 var(--wlui);letter-spacing:.16em;text-transform:uppercase;color:#ffd54a}'
+      + '.sg-sec{margin-top:16px}.sg-sec h3{margin:0 0 8px;font:700 13px/1 var(--wlui);letter-spacing:.16em;text-transform:uppercase;color:#9fd0ff}.sg-note{color:#b7cdf5;font:600 14px/1.35 var(--wlui)}'
+      + css.replace(/#dlgStats/g, '.x-wrap') + '.x-wrap{--st-line:rgba(255,255,255,.16);--st-dim:#9fb6de;--st-soft:#cfe0ff;--st-gold:#ffd54a;--st-cyan:#5cc8fb}'
+      + '@media print{body{background:#061a4a;-webkit-print-color-adjust:exact;print-color-adjust:exact}.x-sec{break-inside:avoid-page}}'
+      + '</style></head><body><div class="x-wrap"><div class="x-top"><h1>My play stats</h1><p>S Games Portal &middot; saved ' + when.toLocaleString() + '</p></div>' + parts.join('') + '</div></body></html>';
+    try{ var blob = new Blob([doc], { type:'text/html' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'play-stats-' + dkey(when) + '.html'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800); }catch(e){}
+  }
   window.addEventListener('storage', function(e){ if (e.key === KEY && dlg.open) render(); });
   document.getElementById('btnStats').addEventListener('click', openStats);
 
@@ -4672,7 +4708,7 @@ if ('serviceWorker' in navigator) {
       if (!armed){ armed = 1; rb.textContent = 'Tap again to erase'; armTimer = setTimeout(disarm, 4000); return; }
       disarm(); try{ localStorage.removeItem(KEY); }catch(e){} paintSum(); if (dlg.open) render();
     });
-    var dl = document.getElementById('stExport2'); if (dl) dl.addEventListener('click', function(){ document.getElementById('stExport').click(); });
+    var dl = document.getElementById('stExport2'); if (dl) dl.addEventListener('click', exportHtml);
     var sb = document.getElementById('btnSettings'); if (sb) sb.addEventListener('click', paintSum);
     window.addEventListener('storage', function(e){ if (e.key === KEY) paintSum(); });
     paintSum();
