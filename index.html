@@ -2984,6 +2984,17 @@ window.SG_WORDS = {
 #sgOrder .ord-sec .ord-list{margin-bottom:8px}
 #sgOrder.ord-static .grip,#sgOrder.ord-static .mv{display:none !important}
 </style>
+<style id="pick-css">
+.sg-pick{display:block;margin:10px 0 12px;padding:10px 10px 8px;border-radius:18px;background:rgba(255,213,74,.10);border:1.5px solid rgba(255,213,74,.5)}
+.sg-pick .lab{display:flex;align-items:center;gap:8px;margin:0 2px 8px;font:800 12px/1 var(--wlui,system-ui);letter-spacing:.12em;text-transform:uppercase;color:#ffd54a}
+.sg-pick .lab::before{content:"";width:8px;height:8px;border-radius:50%;background:#ffd54a;box-shadow:0 0 0 3px rgba(255,213,74,.25)}
+.sg-pick .sort-tabs{display:flex;gap:6px;margin:0;padding:5px;border-radius:15px;background:rgba(3,40,110,.6);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28)}
+.sg-pick .sort-tabs button{flex:1;min-height:46px;border:0;border-radius:11px;background:transparent;color:#dcebff;font:800 16px/1 var(--wlui,system-ui);letter-spacing:.1em;text-transform:uppercase}
+.sg-pick .sort-tabs button[aria-selected="true"]{background:#fff;color:#10294f;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.sg-pick .sort-tabs button:not([aria-selected="true"]):hover{background:rgba(255,255,255,.12)}
+</style>
+<style id="fsmode-css">.fsmode{padding:8px 0}.fsmode .t{font:700 17px/1.2 var(--wlui,system-ui);color:#fff}.fsmode .t small{display:block;margin-top:3px;font:500 13px/1.3 var(--wlui,system-ui);color:#b7cdf5}.fsmode .sort-tabs{margin:8px 0 2px}</style>
+<style id="top-css">.sg-top .row{border:0;padding:2px 2px 8px}.sg-top .row .t{font:800 17px/1.2 var(--wlui,system-ui);color:#fff}.sg-top .row .t small{display:block;margin-top:3px;font:500 13px/1.3 var(--wlui,system-ui);color:#d8e6ff;white-space:normal !important;overflow:visible !important;text-overflow:clip !important}.sg-top .sort-tabs[hidden]{display:none}.sg-top .sort-tabs{margin-top:2px}</style>
 <body>
   <header class="brand"><h1 aria-label="S Games Portal"><span class="sbadge" aria-hidden="true">S</span><span class="bt" aria-hidden="true"><span class="b1">GAMES</span><span class="b2">PORTAL</span></span></h1></header>
   <nav class="ptabs" id="ptabs" role="tablist" aria-label="Game collections"><button type="button" role="tab" data-t="classic" id="ptClassic" aria-selected="true">Classic</button><button type="button" role="tab" data-t="new" id="ptNew" aria-selected="false">New</button></nav>
@@ -3101,8 +3112,8 @@ window.SG_WORDS = {
       <div class="sg-head"><h2 id="sgTitle">Settings</h2><button class="sg-x" id="sgClose" type="button" aria-label="Close settings">&#10005;</button></div>
       <div class="sg-tabs" role="tablist" aria-label="Settings sections"><button class="sg-tab" id="tabLayout" role="tab" type="button" aria-selected="true" aria-controls="sgBody">Layout</button><button class="sg-tab" id="tabGeneral" role="tab" type="button" aria-selected="false" aria-controls="sgBody">General</button><button class="sg-tab" id="tabData" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Data</button></div>
       <div class="sg-body" id="sgBody" data-tab="layout">
-        <section class="sg-sec scope" data-tab="layout" aria-label="Which collection you are editing"><div class="sg-scope"><h3>Collection</h3><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div><div class="row"><div class="t">Same settings for both<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same settings for Classic and New"><span></span></label></div></div></section>
-        <section class="sg-sec sg-part" data-tab="layout" id="partLook"><h2>Appearance</h2><p>How the games look on the page.</p></section>
+        <section class="sg-sec" data-tab="layout" aria-label="Same or separate layout"><div class="sg-pick sg-top"><span class="lab">Layout and groups</span><div class="row"><div class="t">Same for Classic and New<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same layout and groups for Classic and New"><span></span></label></div><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div></div></section>
+        <section class="sg-sec sg-part" data-tab="layout" id="partLook"><h2>Appearance</h2><p>How the page looks.</p></section>
         <section class="sg-sec" data-tab="layout" aria-labelledby="hLayout">
           <h3 id="hLayout">Layout</h3>
           <div class="layouts" id="sgLayouts" role="radiogroup" aria-label="How the games are shown"></div>
@@ -3121,7 +3132,7 @@ window.SG_WORDS = {
         <section class="sg-sec" data-tab="general" id="secScreen" aria-labelledby="hScreen">
           <h3 id="hScreen">Screen</h3>
           <div class="row" id="rowIdxFs"><div class="t">Fullscreen: this page<small>The portal stays full screen until you leave it</small></div><label class="sw"><input type="checkbox" id="swFs" aria-label="Fullscreen on this page"><span></span></label></div>
-          <div class="row"><div class="t">Fullscreen: all games<small>Turns fullscreen on or off in every game&rsquo;s own settings</small></div><label class="sw"><input type="checkbox" id="swGamesFs" aria-label="Fullscreen in all games"><span></span></label></div>
+          <div class="fsmode"><div class="t">Fullscreen in the games<small id="fsModeNote"></small></div><div class="sort-tabs" id="fsModeTabs" role="radiogroup" aria-label="Fullscreen in the games"><button type="button" role="radio" data-fsm="on" aria-checked="false">On</button><button type="button" role="radio" data-fsm="off" aria-checked="false">Off</button><button type="button" role="radio" data-fsm="game" aria-checked="true">Per game</button></div></div>
         </section>
         <section class="sg-sec" data-tab="general" id="secSound" aria-labelledby="hSound">
           <h3 id="hSound">Sound</h3>
@@ -3136,7 +3147,7 @@ window.SG_WORDS = {
           </div>
           <div class="row" id="rowLetter"><div class="t">Show the first letter of hidden words</div><label class="sw"><input type="checkbox" id="swLetter" aria-label="Show the first letter of hidden words" checked><span></span></label></div>
         </section>
-        <section class="sg-sec sg-part" data-tab="layout" id="partGroups"><h2>Groups</h2><p>Split the page into titled sections of games, and choose which section comes first.</p></section>
+        <section class="sg-sec sg-part" data-tab="layout" id="partGroups"><h2>Groups</h2><p>Titled sections of games. Which games sit in which group is always set per page, under Edit groups.</p></section>
         <section class="sg-sec" data-tab="layout" aria-labelledby="hGroupBy">
           <h3 id="hGroupBy">Group by</h3>
           <p class="sg-note">Split the page into titled sections of games.</p>
@@ -3154,7 +3165,7 @@ window.SG_WORDS = {
           <ul class="ord-list" id="groupCards" aria-label="Groups, in the order they appear"></ul>
           <button type="button" class="sg-b add-group" id="editGroups">Edit groups&hellip;</button>
         </section>
-        <section class="sg-sec sg-part" data-tab="layout" id="partSort"><h2>Sorting</h2><p>Choose how the games are ordered, then arrange them yourself or by name.</p></section>
+        <section class="sg-sec sg-part" data-tab="layout" id="partSort"><h2>Sorting</h2><p>Alphabetical or custom, then the order of the games. The order is always set for one page at a time.</p></section>
         <section class="sg-sec" data-tab="layout" aria-labelledby="hSortBy">
           <h3 id="hSortBy">Sort by</h3>
           <p class="sg-note" id="sortNote"></p>
@@ -3166,6 +3177,7 @@ window.SG_WORDS = {
         </section>
         <section class="sg-sec" data-tab="layout" id="secOrder" aria-labelledby="hOrder">
           <h3 id="hOrder">Custom order of the games</h3>
+          <div class="sg-pick"><span class="lab">Choose which games to edit</span><div class="sort-tabs" role="tablist" aria-label="Collection"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div></div>
           <p class="sg-note" id="ordNote">Drag the handle to rearrange, or use the arrows. Use a game&rsquo;s switch to show or hide its whole card.</p>
           <div id="sgOrder"></div>
           <div class="sr" id="sgLive" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></div>
@@ -3199,6 +3211,7 @@ window.SG_WORDS = {
     <div class="sg-card">
       <div class="sg-head"><h2 id="geTitle">Custom groups</h2><button class="sg-x" id="geClose" type="button" aria-label="Close group editor">&#10005;</button></div>
       <div class="sg-body ge-body" id="geBody">
+        <div class="sg-pick"><span class="lab">Choose which games to place</span><div class="sort-tabs" role="tablist" aria-label="Collection"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div></div>
         <p class="sg-note">Start with one group, or add up to five. Name each one, add a short description, and drag games into the group they belong in (or focus a game&rsquo;s handle and use the arrow keys). While you drag, the list scrolls when you reach the top or bottom edge.</p>
         <div id="editCards"></div>
         <button type="button" class="sg-b add-group" id="addGroup">+ Add a group</button>
@@ -3458,7 +3471,7 @@ window.SG_WORDS = {
     ['classic','new'].forEach(function(t){ var raw = null; try{ raw = JSON.parse(localStorage.getItem(KEYS[t])); }catch(e){ raw = states[t]; } states[t] = cleanFor(t, raw); });
     syncGlobal(); if (linked) mirror(states.classic, states['new'], 'new'); state = states[tab];
   }
-  var LINKKEY = 'sgames.portal.link', linked = true; try{ if (localStorage.getItem(LINKKEY) === '0') linked = false; }catch(e){}
+  var LINKKEY = 'sgames.portal.link', linked = true; try{ if (localStorage.getItem(LINKKEY) === '0') linked = false; }catch(e){}   // the look, groups and sorting style can match on both pages (default) or be separate; the games themselves (order, visibility, group membership) are always per page
   var SHARED = ['layout','scores','names','gnames','share','group','sorts','dirs','gorder','cgroups'];
   function mirror(from, to, toTab){                                 // copy the shared look-and-feel; game order and hidden games stay per collection
     SHARED.forEach(function(k){ to[k] = JSON.parse(JSON.stringify(from[k])); });
@@ -3558,7 +3571,7 @@ window.SG_WORDS = {
   $('tabGeneral').addEventListener('click', function(){ setTab('general'); });
   $('tabData').addEventListener('click', function(){ setTab('data'); });
   function refreshSwitches(){
-    $('swFs').checked = !!state.indexFs; $('rowIdxFs').hidden = !FS_OK; $('swGamesFs').checked = !!state.fullscreen;
+    $('swFs').checked = !!state.indexFs; $('rowIdxFs').hidden = !FS_OK; paintFsMode();
     var circ = state.layout === 'circles' || state.layout === 'circlesl', tl = state.layout === 'tiles';
     // game titles: optional only in the circle layouts, always on elsewhere
     $('swGnames').checked = circ ? !!state.gnames : true; $('swGnames').disabled = !circ; $('rowGnames').classList.toggle('off', !circ);
@@ -3604,7 +3617,60 @@ window.SG_WORDS = {
         } }
     }catch(e){}
   }
-  $('swGamesFs').addEventListener('change', function(){ states.classic.fullscreen = states['new'].fullscreen = this.checked; saveAll(); applyGamesFs(this.checked); toast(this.checked ? 'Fullscreen is on in every game' : 'Fullscreen is off in every game'); });
+  /* Fullscreen in the games: On, Off, or Per game (each game keeps whatever it has recorded). Going from Per game to On/Off first writes down every game's own value, so Per game can put them back. */
+  var FSMODE = 'sgames.portal.fsmode', FSREC = 'sgames.portal.fsrec';
+  function getFsMode(){ try{ var m = localStorage.getItem(FSMODE); return (m === 'on' || m === 'off') ? m : 'game'; }catch(e){ return 'game'; } }
+  function readJsonField(key, field){
+    try{ var raw = localStorage.getItem(key); if (raw === null) return { has:false }; var o = JSON.parse(raw);
+      if (!o || typeof o !== 'object' || Array.isArray(o)) return { has:true, skip:true };
+      return { has:true, v:(field in o) ? o[field] : null, set:(field in o) };
+    }catch(e){ return { has:true, skip:true }; }
+  }
+  function restoreJsonField(key, field, r, onlyIfThere){
+    if (!r || r.skip) return;
+    try{
+      var raw = localStorage.getItem(key); if (raw === null){ return; }
+      var o = JSON.parse(raw); if (!o || typeof o !== 'object' || Array.isArray(o)) return;
+      if (r.set) o[field] = r.v; else delete o[field];
+      if (!Object.keys(o).length && !r.has) localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(o));
+    }catch(e){}
+  }
+  function readAllGames(){
+    var rec = { j:{}, r:null, p:null };
+    GAME_FS.forEach(function(g){ rec.j[g[0]] = readJsonField(g[0], g[1]); });
+    rec.j['yarnunravel.v1.save'] = readJsonField('yarnunravel.v1.save', 'fs');
+    try{ rec.r = localStorage.getItem('rampage_fullscreen'); }catch(e){}
+    try{ var raw = localStorage.getItem('pacmansWar_save_v1'); if (raw){ var p = JSON.parse(raw); rec.p = { s:(p.settings ? p.settings.fullscreenPref : undefined), ps:(p.profileSettings ? p.profileSettings.fullscreenPref : undefined), pr:(Array.isArray(p.profiles) ? p.profiles.map(function(x){ return x && x.profileSettings ? x.profileSettings.fullscreenPref : undefined; }) : []) }; } }catch(e){}
+    return rec;
+  }
+  function restoreAllGames(rec){
+    GAME_FS.forEach(function(g){ restoreJsonField(g[0], g[1], rec.j[g[0]]); });
+    restoreJsonField('yarnunravel.v1.save', 'fs', rec.j['yarnunravel.v1.save']);
+    try{ if (rec.r === null || rec.r === undefined) localStorage.removeItem('rampage_fullscreen'); else localStorage.setItem('rampage_fullscreen', rec.r); }catch(e){}
+    try{ var raw = localStorage.getItem('pacmansWar_save_v1'); if (raw && rec.p){ var p = JSON.parse(raw);
+      if (p.settings && rec.p.s !== undefined) p.settings.fullscreenPref = rec.p.s;
+      if (p.profileSettings && rec.p.ps !== undefined) p.profileSettings.fullscreenPref = rec.p.ps;
+      if (Array.isArray(p.profiles)) p.profiles.forEach(function(x, i){ if (x && x.profileSettings && rec.p.pr[i] !== undefined) x.profileSettings.fullscreenPref = rec.p.pr[i]; });
+      localStorage.setItem('pacmansWar_save_v1', JSON.stringify(p)); } }catch(e){}
+  }
+  function setFsMode(m, quiet){
+    var prev = getFsMode(); if (m === prev) { paintFsMode(); return; }
+    if (prev === 'game' && m !== 'game'){ try{ localStorage.setItem(FSREC, JSON.stringify(readAllGames())); }catch(e){} }
+    var flag = true;
+    if (m === 'game'){
+      try{ var rec = JSON.parse(localStorage.getItem(FSREC)); if (rec){ restoreAllGames(rec); var ot = rec.j && rec.j['otrail1:settings']; if (ot && ot.set && typeof ot.v === 'boolean') flag = ot.v; } localStorage.removeItem(FSREC); }catch(e){}
+    } else { applyGamesFs(m === 'on'); flag = (m === 'on'); }
+    states.classic.fullscreen = states['new'].fullscreen = flag; saveAll();
+    try{ if (m === 'game') localStorage.removeItem(FSMODE); else localStorage.setItem(FSMODE, m); }catch(e){}
+    paintFsMode();
+    if (!quiet) toast(m === 'on' ? 'Fullscreen is on in every game' : m === 'off' ? 'Fullscreen is off in every game' : 'Each game is back to its own fullscreen setting');
+  }
+  function paintFsMode(){
+    var m = getFsMode();
+    [].forEach.call(document.querySelectorAll('#fsModeTabs [data-fsm]'), function(b){ var on = b.dataset.fsm === m; b.setAttribute('aria-checked', String(on)); b.setAttribute('aria-selected', String(on)); });
+    var n = $('fsModeNote'); if (n) n.textContent = m === 'on' ? 'Every game keeps asking for fullscreen' : m === 'off' ? 'Every game stays out of fullscreen' : 'Each game uses the fullscreen setting you gave it. Switching back here restores them.';
+  }
+  [].forEach.call(document.querySelectorAll('#fsModeTabs [data-fsm]'), function(b){ b.addEventListener('click', function(){ setFsMode(b.dataset.fsm); }); });
   $('swScores').addEventListener('change', function(){ state.scores = this.checked; save(); apply(); refreshSwitches(); refreshOrder(); });
   $('swGnames').addEventListener('change', function(){ state.gnames = this.checked; save(); apply(); });
   $('swNames').addEventListener('change', function(){ state.names = this.checked; save(); apply(); });
@@ -3808,7 +3874,7 @@ window.SG_WORDS = {
   });
   var gdlg = $('dlgGroups');
   $('editGroups').addEventListener('click', function(){ geSnap = geState(); buildEditor(); open(gdlg); var b = $('geBody'); if (b) b.scrollTop = 0; });
-  var geSnap = '', setSnap = '', xdlg = $('dlgExit'), exitCfg = null;
+  var fsSnap = 'game', geSnap = '', setSnap = '', xdlg = $('dlgExit'), exitCfg = null;
   function askExit(cfg){ exitCfg = cfg; $('exTitle').textContent = cfg.title; $('exMsg').textContent = cfg.msg; open(xdlg); }
   $('exKeep').addEventListener('click', function(){ shut(xdlg); });
   $('exSave').addEventListener('click', function(){ shut(xdlg); if (exitCfg) exitCfg.save(); });
@@ -3980,7 +4046,7 @@ window.SG_WORDS = {
   /* ----- open / close (the phone's back button closes the settings, it does not leave the page) ----- */
   function openSettings(){
     load(); apply(); buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); buildResets(); paintTabs(); paintLink(); paintLink();
-    setSnap = JSON.stringify([states.classic, states['new']]);
+    setSnap = JSON.stringify([states.classic, states['new']]); fsSnap = getFsMode();
     open(dlg);
     setTab(lastTab);
     [].forEach.call(dlg.querySelectorAll('.sg-body, .sg-card'), function(n){ n.scrollTop = 0; }); dlg.scrollTop = 0; requestAnimationFrame(function(){ [].forEach.call(dlg.querySelectorAll('.sg-body'), function(n){ n.scrollTop = 0; }); });
@@ -3997,15 +4063,16 @@ window.SG_WORDS = {
     if (t === tab) return;
     tab = t; try{ localStorage.setItem(TABKEY, t); }catch(e){}
     setGames(); state = states[tab]; apply(); paintTabs();
-    if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); $('sgBody').scrollTop = 0; }
+    if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); }
+    if (gdlg.open){ geSnap = ''; buildEditor(); geSnap = geState(); }
     if (window.sgUpdateScores) try{ window.sgUpdateScores(); }catch(e){}
   }
   [].forEach.call(document.querySelectorAll('#ptabs button'), function(b){ b.addEventListener('click', function(){ switchTab(b.dataset.t); }); });
   [].forEach.call(document.querySelectorAll('[data-ed]'), function(b){ b.addEventListener('click', function(){ switchTab(b.dataset.ed); }); });
   function paintLink(){
     [].forEach.call(document.querySelectorAll('.swLink'), function(c){ c.checked = linked; });
-    [].forEach.call(document.querySelectorAll('.sg-scope .sort-tabs'), function(t){ t.hidden = linked; });
-    [].forEach.call(document.querySelectorAll('.linkNote'), function(n){ n.textContent = linked ? 'Layout, cards, groups and sorting are shared. Game order and which games show follow the Classic / New tab you have open on the page.' : 'Classic and New are set up separately.'; });
+    [].forEach.call(document.querySelectorAll('.sg-top .sort-tabs'), function(t){ t.hidden = linked; });
+    [].forEach.call(document.querySelectorAll('.linkNote'), function(n){ n.textContent = linked ? 'The look, groups and sorting style are the same on both pages.' : 'The look, groups and sorting style are separate. Choose the page to edit below.'; });
   }
   [].forEach.call(document.querySelectorAll('.swLink'), function(c){ c.addEventListener('change', function(){
     if (!c.checked){ linked = false; try{ localStorage.setItem(LINKKEY, '0'); }catch(e){} paintLink(); toast('Classic and New are now separate'); return; }
@@ -4047,7 +4114,7 @@ window.SG_WORDS = {
       var wasI = state.indexFs, wasG = state.fullscreen, sn = JSON.parse(setSnap);
       states.classic = cleanFor('classic', sn[0]); states['new'] = cleanFor('new', sn[1]); syncGlobal(); state = states[tab]; saveAll(); apply();
       buildLayouts(); refreshSwitches(); refreshSort(); buildOrder();
-      if (state.fullscreen !== wasG) applyGamesFs(state.fullscreen);
+      if (getFsMode() !== fsSnap) setFsMode(fsSnap, true);
       if (state.indexFs !== wasI){ if (state.indexFs){ fsUserExited = false; fsEnter(); } else fsExit(); }
       shut(dlg); toast('Changes discarded');
     } });
@@ -4673,22 +4740,25 @@ if ('serviceWorker' in navigator) {
   dlg.addEventListener('click', function(e){ if (e.target === dlg) closeStats(); });
   document.getElementById('stClose').addEventListener('click', closeStats);
   document.getElementById('stDone').addEventListener('click', closeStats);
-  /* Download: a standalone web page with every stats tab exactly as it looks here (charts, tiles, tables), opens in any browser, works offline. */
+  /* Download: a standalone, working copy of this Play stats screen. It carries your data and the same code, so the tabs, day ranges, sorting, search and open/close all still work offline in any browser. */
   function exportHtml(){
     var st = load(); if (!st) return;
-    var keepTab = S.tab, keepScroll = body.scrollTop, parts = [];
-    try{
-      TABS.forEach(function(t){ S.tab = t[0]; render(); var h = body.innerHTML; if (h) parts.push('<section class="x-sec"><h2 class="x-h">' + t[1] + '</h2>' + h + '</section>'); });
-    }finally{ S.tab = keepTab; render(); body.scrollTop = keepScroll; }
-    var css = (document.getElementById('stats-css') || {}).textContent || '', when = new Date();
-    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My play stats - ' + dkey(when) + '</title><style>'
-      + ':root{--wlui:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif}*{box-sizing:border-box}html,body{margin:0}body{background:linear-gradient(180deg,#0a2a73,#061a4a 60%,#04123a);min-height:100vh;color:#fff;font-family:var(--wlui);padding:24px 14px 60px}'
-      + '.x-wrap{max-width:820px;margin:0 auto}.x-top h1{margin:0;font:900 clamp(30px,7vw,46px)/1.05 var(--wlui);letter-spacing:-.01em}.x-top p{margin:6px 0 22px;color:#9fb6de;font:600 15px/1.3 var(--wlui)}'
-      + '.x-sec{margin:0 0 28px;padding:18px 18px 8px;border-radius:20px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16)}.x-h{margin:0 0 4px;font:800 14px/1 var(--wlui);letter-spacing:.16em;text-transform:uppercase;color:#ffd54a}'
-      + '.sg-sec{margin-top:16px}.sg-sec h3{margin:0 0 8px;font:700 13px/1 var(--wlui);letter-spacing:.16em;text-transform:uppercase;color:#9fd0ff}.sg-note{color:#b7cdf5;font:600 14px/1.35 var(--wlui)}'
-      + css.replace(/#dlgStats/g, '.x-wrap') + '.x-wrap{--st-line:rgba(255,255,255,.16);--st-dim:#9fb6de;--st-soft:#cfe0ff;--st-gold:#ffd54a;--st-cyan:#5cc8fb}'
-      + '@media print{body{background:#061a4a;-webkit-print-color-adjust:exact;print-color-adjust:exact}.x-sec{break-inside:avoid-page}}'
-      + '</style></head><body><div class="x-wrap"><div class="x-top"><h1>My play stats</h1><p>S Games Portal &middot; saved ' + when.toLocaleString() + '</p></div>' + parts.join('') + '</div></body></html>';
+    var when = new Date(), sizes = {}, esc = function(t){ return String(t).replace(/<\//g, '<\\/'); };
+    try{ for (var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); sizes[k] = (localStorage.getItem(k) || '').length; } }catch(e){}
+    var styles = [].map.call(document.querySelectorAll('style'), function(x){ return x.textContent; }).join('\n');
+    var code = (document.getElementById('stats-ui') || {}).textContent || '';
+    var shim = '(function(){var D=' + esc(JSON.stringify({ stats:JSON.stringify(st), sizes:sizes })) + ';var M={};Object.keys(D.sizes).forEach(function(k){M[k]=null});M["sgp_stats"]=D.stats;'
+      + 'var ls={get length(){return Object.keys(M).length},key:function(i){return Object.keys(M)[i]===undefined?null:Object.keys(M)[i]},getItem:function(k){if(k==="sgp_stats")return D.stats;if(!(k in M))return null;var n=D.sizes[k]||0;return n?new Array(n+1).join("x"):""},setItem:function(){},removeItem:function(){},clear:function(){}};'
+      + 'Object.defineProperty(window,"localStorage",{value:ls,configurable:true});})();';
+    var doc = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My play stats - ' + dkey(when) + '</title><style>' + styles + '</style><style>'
+      + 'html,body{margin:0;min-height:100%}body{display:block !important;background:linear-gradient(180deg,#0a2a73,#061a4a 60%,#04123a) fixed !important;color:#fff;font-family:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;padding:22px 12px 60px}'
+      + '.x-top{max-width:820px;margin:0 auto 14px}.x-top h1{margin:0;font:900 clamp(30px,7vw,46px)/1.05 "Barlow Semi Condensed",system-ui,sans-serif}.x-top p{margin:6px 0 0;color:#9fb6de;font:600 15px/1.3 system-ui,sans-serif}'
+      + '#dlgStats{position:static !important;display:block !important;inset:auto !important;margin:0 auto !important;width:min(820px,100%) !important;max-width:100% !important;max-height:none !important;height:auto !important;transform:none !important}'
+      + '#dlgStats .sg-card{max-height:none !important;height:auto !important}#dlgStats .sg-body{max-height:none !important;overflow:visible !important;min-height:0 !important}#dlgStats .sg-tabs{position:sticky;top:0;z-index:5;background:#0a2a73}'
+      + '</style></head><body><div class="x-top"><h1>My play stats</h1><p>S Games Portal &middot; saved ' + esc(when.toLocaleString()) + '. This is a working copy: tap the tabs and buttons.</p></div>'
+      + '<dialog id="dlgStats" class="sg-dlg" open><div class="sg-card"><div class="sg-tabs" id="stTabs" role="tablist" aria-label="Play stats sections"></div><div class="sg-body" id="stBody"></div></div></dialog>'
+      + '<div hidden><button id="btnSettings"></button><button id="btnStats"></button><button id="stClose"></button><button id="stDone"></button><button id="stExport2"></button><button id="stReset2"></button><span id="stSumSmall"></span></div>'
+      + '<script>' + shim + '<\/script><script>' + esc(code) + '<\/script><script>document.getElementById("btnStats").click();<\/script></body></html>';
     try{ var blob = new Blob([doc], { type:'text/html' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'play-stats-' + dkey(when) + '.html'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800); }catch(e){}
   }
   window.addEventListener('storage', function(e){ if (e.key === KEY && dlg.open) render(); });
