@@ -785,6 +785,10 @@ h1 em{display:block;font-style:normal;font-size:.42em;margin-top:6px;color:#e847
 #hc{position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px)}
 #lvls{background:linear-gradient(#cfe8f5,#eaf5fb);overflow-y:auto;touch-action:pan-y;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 40px;box-sizing:border-box}
 #prz,#pwr,#dly,#shp{background:linear-gradient(#cfe8f5,#eaf5fb);overflow-y:auto;touch-action:pan-y;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 40px;box-sizing:border-box}
+/* pinned header + tabs, one scroller for the content */
+#prz:not(.hide),#pwr:not(.hide),#dly:not(.hide),#shp:not(.hide){display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+#prz header,#pwr header,#dly header,#shp header,#tabs,#stabs{flex:none;width:100%}
+#pc,#pwc,#dc,#shc{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));scrollbar-width:thin}
 #lvls header{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 6px}
 #prz header,#pwr header,#dly header,#shp header{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 6px}
 #lvls h2{margin:0;color:#e8474c;font-size:28px;-webkit-text-stroke:4px #fff;paint-order:stroke fill}
@@ -4848,9 +4852,9 @@ function prizRender(){
   for(let i=cur;i<cur+25;i++)h+=row(chStep(i),i===cur?'cur':'lock');
   h+='</div>'}
  $('#pc').innerHTML=h;prizeBadge();
- $('#pc').style.paddingTop='';if(ptab==='road')[30,150,400].forEach(t=>setTimeout(trCenter,t))}
-function trCenter(){if(scr!=='prz'||ptab!=='road')return;const sc=$('#prz'),d=$('#trdiv'),pc=$('#pc');if(!d||!sc.clientHeight)return;pc.style.paddingTop='26px';sc.scrollTop=0;
- const dt=d.getBoundingClientRect().top-sc.getBoundingClientRect().top,tg=Math.min(130,sc.clientHeight*.2);sc.scrollTop=Math.max(0,dt-tg)}
+ $('#pc').style.paddingTop='';if(ptab==='road')[30,150,400].forEach(t=>setTimeout(trCenter,t));else $('#pc').scrollTop=0}
+function trCenter(){if(scr!=='prz'||ptab!=='road')return;const d=$('#trdiv'),sc=$('#pc');if(!d||!sc.clientHeight)return;sc.style.paddingTop='26px';sc.scrollTop=0;
+ const dt=d.getBoundingClientRect().top-sc.getBoundingClientRect().top,tg=sc.clientHeight*.5-8;sc.scrollTop=Math.max(0,dt-tg)}
 function dlyRender(){
  document.querySelectorAll('.cn').forEach(e=>e.textContent=save.coins);const d=dailies();
  const sn=save.ds.last===today()||save.ds.last===yday()?save.ds.n:0;
@@ -5155,7 +5159,7 @@ function homeBuild(){
   const m=new THREE.Mesh(GEO.s,new THREE.MeshStandardMaterial({color:COL[cs[i]],map:t,bumpMap:t,bumpScale:1.5,roughness:.95}));m.scale.setScalar(.42);
   const bf=(baseZ-5)/baseZ;m.scale.setScalar(.42*bf);const w=new THREE.Group();w.add(m);w.position.set(q[0]*bf,q[1]*bf,5);scene.add(w);homeObjs.push({g:w,sp:(i%2?-1:1)*(.22+((i*37)%5)*.11),y0:q[1]*bf,ph:i*1.7,fq:.0007+(i%3)*.00025,am:.07+(i%4)*.03})});
 }
-function show(s){scr=s;if(s==='home')try{mkRender()}catch(e){}$('#home').classList.toggle('hide',s!=='home');$('#lvls').classList.toggle('hide',s!=='lvls');$('#prz').classList.toggle('hide',s!=='prz');$('#pwr').classList.toggle('hide',s!=='pwr');$('#dly').classList.toggle('hide',s!=='dly');$('#shp').classList.toggle('hide',s!=='shp');$('#trl').classList.toggle('hide',s!=='trl');$('#hud').classList.toggle('hide',s!=='game');if(s==='game')layout();$('#ov').classList.add('hide');
+function show(s){if(s!==scr&&(s==='dly'||s==='pwr'||s==='shp'))['#dc','#pwc','#shc'].forEach(q=>{const e=$(q);if(e)e.scrollTop=0});scr=s;if(s==='home')try{mkRender()}catch(e){}$('#home').classList.toggle('hide',s!=='home');$('#lvls').classList.toggle('hide',s!=='lvls');$('#prz').classList.toggle('hide',s!=='prz');$('#pwr').classList.toggle('hide',s!=='pwr');$('#dly').classList.toggle('hide',s!=='dly');$('#shp').classList.toggle('hide',s!=='shp');$('#trl').classList.toggle('hide',s!=='trl');$('#hud').classList.toggle('hide',s!=='game');if(s==='game')layout();$('#ov').classList.add('hide');
  if(s!=='game'){rollsHide();clearAnims();cancelDown();clearHover();clearHint()}
  if(s==='home'){clearGroup();cam.position.z=baseZ;homeBuild()}else if(s==='lvls'||s==='prz'||s==='pwr'||s==='dly'||s==='shp'||s==='trl')clearHome();
  if(s==='home'){$('#dysub').textContent=gReady()?'Gauntlet ready!':fmtT(msLeft());prizeBadge()}

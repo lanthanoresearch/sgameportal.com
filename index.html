@@ -231,7 +231,7 @@ window.SG_WORDS = {
     else if (key === 'pacmansWar_save_v1') { var p = parse(); if (p && Array.isArray(p.profiles)) addAll(p.profiles, function (x) { return x && x.name; }); }
     else if (/^LZ_MAZEMAKER_\d+$/.test(key)) { var mz = parse(); if (mz && Array.isArray(mz.h)) { if (typeof mz.h[4] === 'string') addUserText(mz.h[4]); if (typeof mz.h[5] === 'string') addUserText(mz.h[5]); } }
     else if (key === 'LZ_MAZEMAKER_SUMMARY') { var sm = parse(); if (sm && sm.top && typeof sm.top.name === 'string') addUserText(sm.top.name); }
-    else if (key === 'sgames.portal') { if (PAGEID === 'index') { var pg = parse(); if (pg && Array.isArray(pg.cgroups)) { addAll(pg.cgroups, function (x) { return x && x.name; }); addAll(pg.cgroups, function (x) { return x && x.desc; }); } } }
+    else if (key === 'sgames.portal' || key === 'sgames.portal.new') { if (PAGEID === 'index') { var pg = parse(); if (pg && Array.isArray(pg.cgroups)) { addAll(pg.cgroups, function (x) { return x && x.name; }); addAll(pg.cgroups, function (x) { return x && x.desc; }); } } }
     else if (/^otrail1:(oregonscores|oregongraves|oregonpack[123]|oregonsave[123])\.dat$/.test(key)) {
       /* Oregon Trail data files are comma-separated lines. Take only the fields that hold a name or something a person wrote:
          scores: the name | graves: the name and the epitaph | packs: the pack name | saved games: the 100 saved labels
@@ -2954,8 +2954,21 @@ window.SG_WORDS = {
 .sort-tabs button:focus-visible{ outline:3px solid #ffd54a; outline-offset:2px; }
 </style>
 </head>
+<style id="collections-css">
+.ptabs{display:flex;gap:6px;width:min(420px,calc(100% - 28px));margin:2px auto 14px;padding:5px;border-radius:18px;background:rgba(3,40,110,.45);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28)}
+.ptabs button{flex:1;appearance:none;border:0;min-height:44px;border-radius:13px;background:transparent;color:#dcebff;font:800 16px/1 var(--wlui,system-ui);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s}
+.ptabs button[aria-selected="true"]{background:#fff;color:#10294f;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.ptabs button:focus-visible{outline:3px solid #ffd54a;outline-offset:2px}
+.ptabs button:not([aria-selected="true"]):hover{background:rgba(255,255,255,.12)}
+.row[hidden]{display:none!important}
+.sg-scope{background:rgba(255,255,255,.08);border-radius:16px;padding:12px 12px 4px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.sg-scope .sort-tabs{margin:2px 0 6px}.sg-scope .sort-tabs[hidden]{display:none}.sg-scope .row:first-of-type{border-top:0;margin-top:0}.sg-scope .row{border-top:1px solid rgba(255,255,255,.14);margin-top:6px}
+.sg-scope .t small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.sg-glob{margin-top:26px;padding-top:6px;border-top:2px solid rgba(255,255,255,.22)}.sg-glob .sg-note{margin:0}
+</style>
 <body>
   <header class="brand"><h1 aria-label="S Games Portal"><span class="sbadge" aria-hidden="true">S</span><span class="bt" aria-hidden="true"><span class="b1">GAMES</span><span class="b2">PORTAL</span></span></h1></header>
+  <nav class="ptabs" id="ptabs" role="tablist" aria-label="Game collections"><button type="button" role="tab" data-t="classic" id="ptClassic" aria-selected="true">Classic</button><button type="button" role="tab" data-t="new" id="ptNew" aria-selected="false">New</button></nav>
 
   <div class="grid m-normal" id="grid">
     <a class="tile live rampage" data-id="rampage" href="rampage.html" aria-label="Play Rampage">
@@ -3070,6 +3083,7 @@ window.SG_WORDS = {
       <div class="sg-head"><h2 id="sgTitle">Settings</h2><button class="sg-x" id="sgClose" type="button" aria-label="Close settings">&#10005;</button></div>
       <div class="sg-tabs" role="tablist" aria-label="Settings sections"><button class="sg-tab" id="tabLayout" role="tab" type="button" aria-selected="true" aria-controls="sgBody">Layout</button><button class="sg-tab" id="tabSort" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Sorting</button><button class="sg-tab" id="tabData" role="tab" type="button" aria-selected="false" aria-controls="sgBody">Data</button></div>
       <div class="sg-body" id="sgBody" data-tab="layout">
+        <section class="sg-sec scope" data-tab="layout" aria-label="Which collection you are editing"><div class="sg-scope"><h3>Collection</h3><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div><div class="row"><div class="t">Same settings for both<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same settings for Classic and New"><span></span></label></div></div></section>
         <section class="sg-sec" data-tab="layout" aria-labelledby="hLayout">
           <h3 id="hLayout">Layout</h3>
           <div class="layouts" id="sgLayouts" role="radiogroup" aria-label="How the games are shown"></div>
@@ -3084,9 +3098,11 @@ window.SG_WORDS = {
           <h4 class="sg-sub">Buttons</h4>
           <div class="row"><div class="t">Share buttons<small id="shareNote">A share button on each game card</small></div><label class="sw"><input type="checkbox" id="swShare" aria-label="Share buttons"><span></span></label></div>
         </section>
+        <section class="sg-sec sg-glob" data-tab="layout"><h3>Everywhere</h3><p class="sg-note">These apply to the whole portal, whichever collection you are on.</p></section>
         <section class="sg-sec" data-tab="layout" id="secScreen" aria-labelledby="hScreen">
           <h3 id="hScreen">Screen</h3>
-          <div class="row"><div class="t">Fullscreen<small>Stays full screen until you leave it</small></div><label class="sw"><input type="checkbox" id="swFs" aria-label="Fullscreen"><span></span></label></div>
+          <div class="row" id="rowIdxFs"><div class="t">Fullscreen: this page<small>The portal stays full screen until you leave it</small></div><label class="sw"><input type="checkbox" id="swFs" aria-label="Fullscreen on this page"><span></span></label></div>
+          <div class="row"><div class="t">Fullscreen: all games<small>Turns fullscreen on or off in every game&rsquo;s own settings</small></div><label class="sw"><input type="checkbox" id="swGamesFs" aria-label="Fullscreen in all games"><span></span></label></div>
         </section>
         <section class="sg-sec" data-tab="layout" id="secSound" aria-labelledby="hSound">
           <h3 id="hSound">Sound</h3>
@@ -3101,6 +3117,7 @@ window.SG_WORDS = {
           </div>
           <div class="row" id="rowLetter"><div class="t">Show the first letter of hidden words</div><label class="sw"><input type="checkbox" id="swLetter" aria-label="Show the first letter of hidden words" checked><span></span></label></div>
         </section>
+        <section class="sg-sec scope" data-tab="sort" aria-label="Which collection you are editing"><div class="sg-scope"><h3>Collection</h3><div class="sort-tabs" role="tablist" aria-label="Collection to edit"><button type="button" role="tab" data-ed="classic" aria-selected="true">Classic</button><button type="button" role="tab" data-ed="new" aria-selected="false">New</button></div><div class="row"><div class="t">Same settings for both<small class="linkNote"></small></div><label class="sw"><input type="checkbox" class="swLink" aria-label="Use the same settings for Classic and New"><span></span></label></div></div></section>
         <section class="sg-sec" data-tab="sort" aria-labelledby="hGroupBy">
           <h3 id="hGroupBy">Group by</h3>
           <p class="sg-note">Split the page into titled sections of games.</p>
@@ -3175,6 +3192,13 @@ window.SG_WORDS = {
       <h2 id="exTitle">Save your changes?</h2>
       <p id="exMsg"></p>
       <div class="stack"><button class="sg-b solid" id="exSave" type="button">Save and exit</button><button class="sg-b" id="exKeep" type="button">Keep editing</button><button class="sg-b ghost-danger" id="exDiscard" type="button">Discard changes</button></div>
+    </div>
+  </dialog>
+  <dialog class="sg-dlg" id="dlgSame" aria-labelledby="smTitle" style="width:min(400px,calc(100vw - 24px))">
+    <div class="sg-card sg-pop">
+      <h2 id="smTitle">Make them the same</h2>
+      <p>Which collection&rsquo;s settings should both use? The other one&rsquo;s layout, card options, groups and sorting will be replaced. Game order and hidden games are not touched.</p>
+      <div class="stack"><button class="sg-b solid" id="sameClassic" type="button">Use Classic&rsquo;s settings</button><button class="sg-b solid" id="sameNew" type="button">Use New&rsquo;s settings</button><button class="sg-b" id="sameNo" type="button">Cancel</button></div>
     </div>
   </dialog>
   <dialog class="sg-dlg" id="dlgTip" aria-labelledby="tipTitle" style="width:min(400px,calc(100vw - 24px))">
@@ -3307,7 +3331,7 @@ window.SG_WORDS = {
 // which no game touches and no reset removes (except "Restore layout").
 (function(){
   var KEY = 'sgames.portal';
-  var GAMES = [
+  var ALL = [
     { id:'rampage',  name:'Rampage',             prefixes:['rampage_'],                                   scored:true },
     { id:'warlords', name:'War Lords',           prefixes:['warlords.'],                                  scored:true },
     { id:'rts',      name:'Reach for the Stars', prefixes:['reachforthestars.','reach-for-the-stars/'],   scored:true },
@@ -3330,7 +3354,13 @@ window.SG_WORDS = {
     list:'<svg viewBox="0 0 34 26"><rect x="1" y="2" width="9" height="6" rx="1.5" fill="currentColor"/><rect x="12" y="3" width="21" height="4" rx="1.5" fill="currentColor"/><rect x="1" y="10" width="9" height="6" rx="1.5" fill="currentColor"/><rect x="12" y="11" width="21" height="4" rx="1.5" fill="currentColor"/><rect x="1" y="18" width="9" height="6" rx="1.5" fill="currentColor"/><rect x="12" y="19" width="21" height="4" rx="1.5" fill="currentColor"/></svg>'
   };
   function $(id){ return document.getElementById(id); }
-  var byId = {}; GAMES.forEach(function(g){ byId[g.id] = g; });
+  /* two collections: Classic (every game but the newest) and New (just Yarn Unravel for now). Each has its own saved layout, groups and sorting. */
+  var KEYS = { classic:KEY, 'new':KEY + '.new' }, TABKEY = 'sgames.portal.tab', TABOF = { yarn:'new' };
+  var tab = 'classic'; try{ if (localStorage.getItem(TABKEY) === 'new') tab = 'new'; }catch(e){}
+  var GAMES = [], byId = {}, states = {};
+  function tabOf(id){ return TABOF[id] || 'classic'; }
+  function setGames(){ GAMES = ALL.filter(function(g){ return tabOf(g.id) === tab; }); byId = {}; GAMES.forEach(function(g){ byId[g.id] = g; }); }
+  setGames();
   var grid = $('grid'), tiles = {};
   /* How each game is classified. Edit these to move a game between groups. */
   var NAME_MAX = 24, DESC_MAX = 80;
@@ -3363,10 +3393,10 @@ window.SG_WORDS = {
     return dirOf(k) === 'za' ? a.reverse() : a;
   }
 
-  GAMES.forEach(function(g){ tiles[g.id] = grid.querySelector('[data-id="' + g.id + '"]'); });
+  ALL.forEach(function(g){ tiles[g.id] = grid.querySelector('[data-id="' + g.id + '"]'); });
 
   /* ---------- state (validated, in-memory fallback when storage is unavailable) ---------- */
-  function defaults(){ return { order:GAMES.map(function(g){ return g.id; }), layout:'normal', sorts:{}, orders:{}, group:'none', dirs:{}, gorder:{}, cgroups:[{id:'c1',name:'My games',desc:''}], cmap:{ rampage:'c1', warlords:'c1', rts:'c1', pacman:'c1', oregon:'c1', maze:'c1', forest:'c1', diamonds:'c1', dhr:'c1', merger:'c1', yarn:'c1' }, scores:true, names:true, gnames:true, share:true, fullscreen:true, hidden:{} }; }
+  function defaults(){ return { order:GAMES.map(function(g){ return g.id; }), layout:'normal', sorts:{}, orders:{}, group:'none', dirs:{}, gorder:{}, cgroups:[{id:'c1',name:'My games',desc:''}], cmap:(function(){ var o = {}; GAMES.forEach(function(g){ o[g.id] = 'c1'; }); return o; })(), scores:true, names:true, gnames:true, share:true, fullscreen:true, indexFs:true, hidden:{} }; }
   function clean(o){
     var d = defaults();
     if (!o || typeof o !== 'object') return d;
@@ -3397,12 +3427,30 @@ window.SG_WORDS = {
     if (typeof o.gnames === 'boolean') d.gnames = o.gnames;
     if (typeof o.share === 'boolean') d.share = o.share;
     if (typeof o.fullscreen === 'boolean') d.fullscreen = o.fullscreen;
+    if (typeof o.indexFs === 'boolean') d.indexFs = o.indexFs; else if (typeof o.fullscreen === 'boolean') d.indexFs = o.fullscreen;
     if (o.hidden && typeof o.hidden === 'object') GAMES.forEach(function(g){ if (o.hidden[g.id] === true) d.hidden[g.id] = true; });
     return d;
   }
   var state;
-  function load(){ try{ state = clean(JSON.parse(localStorage.getItem(KEY))); }catch(e){ state = clean(state); } }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function cleanFor(t, o){ var sv = tab; tab = t; setGames(); var r; try{ r = clean(o); }finally{ tab = sv; setGames(); } return r; }
+  function syncGlobal(){ var c = states.classic, n = states['new']; if (c && n){ n.fullscreen = c.fullscreen; n.indexFs = c.indexFs; } }   // fullscreen is one switch for the page and one for the games, shared by both collections
+  function load(){
+    ['classic','new'].forEach(function(t){ var raw = null; try{ raw = JSON.parse(localStorage.getItem(KEYS[t])); }catch(e){ raw = states[t]; } states[t] = cleanFor(t, raw); });
+    syncGlobal(); if (linked) mirror(states.classic, states['new'], 'new'); state = states[tab];
+  }
+  var LINKKEY = 'sgames.portal.link', linked = true; try{ if (localStorage.getItem(LINKKEY) === '0') linked = false; }catch(e){}
+  var SHARED = ['layout','scores','names','gnames','share','group','sorts','dirs','gorder','cgroups'];
+  function mirror(from, to, toTab){                                 // copy the shared look-and-feel; game order and hidden games stay per collection
+    SHARED.forEach(function(k){ to[k] = JSON.parse(JSON.stringify(from[k])); });
+    var ids = {}; to.cgroups.forEach(function(c){ ids[c.id] = 1; });
+    var sv = tab; tab = toTab; setGames(); try{ GAMES.forEach(function(g){ if (!ids[to.cmap[g.id]]) to.cmap[g.id] = to.cgroups[0].id; }); }finally{ tab = sv; setGames(); }
+  }
+  function other(){ return tab === 'classic' ? 'new' : 'classic'; }
+  function save(){
+    if (linked) mirror(state, states[other()], other());
+    try{ localStorage.setItem(KEYS[tab], JSON.stringify(state)); if (linked) localStorage.setItem(KEYS[other()], JSON.stringify(states[other()])); }catch(e){}
+  }
+  function saveAll(){ syncGlobal(); ['classic','new'].forEach(function(t){ try{ localStorage.setItem(KEYS[t], JSON.stringify(states[t])); }catch(e){} }); }
   load();
 
   /* ---------- apply to the page ---------- */
@@ -3423,18 +3471,19 @@ window.SG_WORDS = {
     var isC = state.layout === 'circles' || state.layout === 'circlesl';
     grid.className = 'grid m-' + state.layout + (isC ? ' m-circles' : '') + (state.scores ? '' : ' noscores') + ((state.names && state.layout !== 'tiles') ? '' : ' nonames') + ((isC && !state.gnames) ? ' nogname' : '') + (state.share ? '' : ' noshare');   // the compact Tiles layout never shows names
     var shown = [];
+    ALL.forEach(function(g){ if (tabOf(g.id) !== tab && tiles[g.id]) tiles[g.id].hidden = true; });
     GAMES.forEach(function(g){ var t = tiles[g.id]; if (!t) return; t.hidden = !!state.hidden[g.id]; t.classList.remove('lone'); if (isC) t.title = g.name; else t.removeAttribute('title'); });
     [].forEach.call(grid.querySelectorAll('.tile'), function(t){ if (!t.hidden && t.dataset.id) shown.push(t.dataset.id); });
     markLone(shown);
     $('allHidden').hidden = shown.length > 0;
   }
-  GAMES.forEach(function(g){ var t = tiles[g.id], n = t && t.querySelector('.name'); if (n && !n.querySelector('.nin') && !t.classList.contains('soon')){ var w = document.createElement('span'); w.className = 'nin'; while (n.firstChild) w.appendChild(n.firstChild); n.appendChild(w); } });   // one wrapper so the circle-layout bubble can centre any title
+  ALL.forEach(function(g){ var t = tiles[g.id], n = t && t.querySelector('.name'); if (n && !n.querySelector('.nin') && !t.classList.contains('soon')){ var w = document.createElement('span'); w.className = 'nin'; while (n.firstChild) w.appendChild(n.firstChild); n.appendChild(w); } });   // one wrapper so the circle-layout bubble can centre any title
   apply();
 
   function columns(){ var t = getComputedStyle(grid).gridTemplateColumns; return (t && t !== 'none') ? t.trim().split(/\s+/).length : 1; }
   function markLone(shown){                                                     // a single card left over on the last row: centre it / let it span the row
     if (!shown) shown = state.order.filter(function(id){ return tiles[id] && !state.hidden[id]; });
-    GAMES.forEach(function(g){ if (tiles[g.id]) tiles[g.id].classList.remove('lone'); });
+    ALL.forEach(function(g){ if (tiles[g.id]) tiles[g.id].classList.remove('lone'); });
     var c = columns(), last = shown.length && tiles[shown[shown.length - 1]];
     if (!last || c < 2 || shown.length % c !== 1) return;
     // A short last row always starts at the left in every layout (no centring of a leftover card).
@@ -3446,7 +3495,7 @@ window.SG_WORDS = {
   var fsUserExited = false, fsOwn = false, fsPending = false;
   function fsActive(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
   function fsEnter(){
-    if (!state.fullscreen || !FS_OK || fsActive() || fsPending || fsUserExited) return;
+    if (!state.indexFs || !FS_OK || fsActive() || fsPending || fsUserExited) return;
     var el = document.documentElement, f = el.requestFullscreen || el.webkitRequestFullscreen; if (!f) return;
     try{ fsPending = true; var r = f.call(el, {navigationUI:'hide'}); if (r && r.finally) r.finally(function(){ fsPending = false; }); else setTimeout(function(){ fsPending = false; }, 700); if (r && r.catch) r.catch(function(){}); }catch(e){ fsPending = false; }
   }
@@ -3488,7 +3537,7 @@ window.SG_WORDS = {
   $('tabSort').addEventListener('click', function(){ setTab('sort'); });
   $('tabData').addEventListener('click', function(){ setTab('data'); });
   function refreshSwitches(){
-    $('swFs').checked = !!state.fullscreen; $('secScreen').hidden = !FS_OK;
+    $('swFs').checked = !!state.indexFs; $('rowIdxFs').hidden = !FS_OK; $('swGamesFs').checked = !!state.fullscreen;
     var circ = state.layout === 'circles' || state.layout === 'circlesl', tl = state.layout === 'tiles';
     // game titles: optional only in the circle layouts, always on elsewhere
     $('swGnames').checked = circ ? !!state.gnames : true; $('swGnames').disabled = !circ; $('rowGnames').classList.toggle('off', !circ);
@@ -3504,7 +3553,37 @@ window.SG_WORDS = {
     $('swShare').checked = !!state.share && !circ; $('swShare').disabled = circ; var shr = $('swShare').closest('.row'); if (shr) shr.classList.toggle('off', circ);
     $('shareNote').textContent = circ ? 'Not available in the circle layouts' : 'A share button on each game card';
   }
-  $('swFs').addEventListener('change', function(){ state.fullscreen = this.checked; save(); if (this.checked){ fsUserExited = false; fsEnter(); } else fsExit(); });
+  $('swFs').addEventListener('change', function(){ states.classic.indexFs = states['new'].indexFs = this.checked; saveAll(); if (this.checked){ fsUserExited = false; fsEnter(); } else fsExit(); });
+  /* the "all games" switch: games keep their own fullscreen setting, so write it into each one (only where it already exists, or where it would differ from that game's default) */
+  var GAME_FS = [
+    ['forestracing.settings','fs',false],['merger.v1.set','fullscreen',false],['warlords.prefs','fullscreen',true],['otrail1:settings','full',true],
+    ['dhr.settings.v3','fs',false],['LZ_MAZEMAKER_SETTINGS','fullscreen',false],['reachforthestars.settings','fullscreen',true],['diamonds.settings','fs',false]
+  ];
+  function setJsonField(key, field, v, dflt, onlyIfThere){
+    try{
+      var raw = localStorage.getItem(key), o = null;
+      if (raw !== null){ try{ o = JSON.parse(raw); }catch(e){ return; } if (!o || typeof o !== 'object' || Array.isArray(o)) return; }
+      else { if (onlyIfThere || v === dflt) return; o = {}; }
+      o[field] = v; localStorage.setItem(key, JSON.stringify(o));
+    }catch(e){}
+  }
+  function applyGamesFs(v){
+    v = !!v;
+    GAME_FS.forEach(function(r){ setJsonField(r[0], r[1], v, r[2], false); });
+    try{ var rr = localStorage.getItem('rampage_fullscreen'); if (rr !== null || v !== true) localStorage.setItem('rampage_fullscreen', v ? '1' : '0'); }catch(e){}
+    setJsonField('yarnunravel.v1.save', 'fs', v, false, true);
+    try{                                                                                  // Pac-Man's War: the device setting, plus every profile that set its own
+      var raw = localStorage.getItem('pacmansWar_save_v1');
+      if (raw){ var p = JSON.parse(raw);
+        if (p && typeof p === 'object'){
+          if (p.settings && typeof p.settings === 'object') p.settings.fullscreenPref = v;
+          if (p.profileSettings && p.profileSettings.fullscreenPref !== null && p.profileSettings.fullscreenPref !== undefined) p.profileSettings.fullscreenPref = v;
+          if (Array.isArray(p.profiles)) p.profiles.forEach(function(pr){ if (pr && pr.profileSettings && pr.profileSettings.fullscreenPref !== null && pr.profileSettings.fullscreenPref !== undefined) pr.profileSettings.fullscreenPref = v; });
+          localStorage.setItem('pacmansWar_save_v1', JSON.stringify(p));
+        } }
+    }catch(e){}
+  }
+  $('swGamesFs').addEventListener('change', function(){ states.classic.fullscreen = states['new'].fullscreen = this.checked; saveAll(); applyGamesFs(this.checked); toast(this.checked ? 'Fullscreen is on in every game' : 'Fullscreen is off in every game'); });
   $('swScores').addEventListener('change', function(){ state.scores = this.checked; save(); apply(); refreshSwitches(); refreshOrder(); });
   $('swGnames').addEventListener('change', function(){ state.gnames = this.checked; save(); apply(); });
   $('swNames').addEventListener('change', function(){ state.names = this.checked; save(); apply(); });
@@ -3836,7 +3915,7 @@ window.SG_WORDS = {
     return keysOf(g).length;
   }
   function plural(n, w){ return n + ' ' + w + (n === 1 ? '' : 's'); }
-  function scoredGames(){ return GAMES.filter(function(g){ return g.scored; }); }
+  function scoredGames(){ return ALL.filter(function(g){ return g.scored; }); }
   function buildResets(){
     var box = $('sgResets'); box.innerHTML = '';
     scoredGames().forEach(function(g){
@@ -3873,19 +3952,57 @@ window.SG_WORDS = {
   });
   $('rsLayout').addEventListener('click', function(){
     ask('Restore this page\u2019s layout?', 'This puts the order, layout and switches of this page back to the defaults, and shows every card again. Your games\u2019 scores and settings are not touched.', 'Restore',
-      function(){ state = defaults(); save(); apply(); buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); toast('Layout restored'); }, $('rsLayout'));
+      function(){ var fsv = state.fullscreen, ifs = state.indexFs; state = defaults(); state.fullscreen = fsv; state.indexFs = ifs; states[tab] = state; saveAll(); apply(); buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); toast('Layout restored'); }, $('rsLayout'));
   });
 
   /* ----- open / close (the phone's back button closes the settings, it does not leave the page) ----- */
   function openSettings(){
-    load(); apply(); buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); buildResets();
-    setSnap = JSON.stringify(state);
+    load(); apply(); buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); buildResets(); paintTabs(); paintLink(); paintLink();
+    setSnap = JSON.stringify([states.classic, states['new']]);
     open(dlg);
     setTab(lastTab);
     [].forEach.call(dlg.querySelectorAll('.sg-body, .sg-card'), function(n){ n.scrollTop = 0; }); dlg.scrollTop = 0; requestAnimationFrame(function(){ [].forEach.call(dlg.querySelectorAll('.sg-body'), function(n){ n.scrollTop = 0; }); });
     try{ history.pushState({sgSettings:1}, ''); pushed = true; }catch(e){ pushed = false; }
   }
   $('btnSettings').addEventListener('click', openSettings);
+
+  /* ----- Classic / New ----- */
+  function paintTabs(){
+    [].forEach.call(document.querySelectorAll('#ptabs button'), function(b){ b.setAttribute('aria-selected', String(b.dataset.t === tab)); });
+    [].forEach.call(document.querySelectorAll('[data-ed]'), function(b){ b.setAttribute('aria-selected', String(b.dataset.ed === tab)); });
+  }
+  function switchTab(t){
+    if (t === tab) return;
+    tab = t; try{ localStorage.setItem(TABKEY, t); }catch(e){}
+    setGames(); state = states[tab]; apply(); paintTabs();
+    if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); $('sgBody').scrollTop = 0; }
+    if (window.sgUpdateScores) try{ window.sgUpdateScores(); }catch(e){}
+  }
+  [].forEach.call(document.querySelectorAll('#ptabs button'), function(b){ b.addEventListener('click', function(){ switchTab(b.dataset.t); }); });
+  [].forEach.call(document.querySelectorAll('[data-ed]'), function(b){ b.addEventListener('click', function(){ switchTab(b.dataset.ed); }); });
+  function paintLink(){
+    [].forEach.call(document.querySelectorAll('.swLink'), function(c){ c.checked = linked; });
+    [].forEach.call(document.querySelectorAll('.sg-scope .sort-tabs'), function(t){ t.hidden = linked; });
+    [].forEach.call(document.querySelectorAll('.linkNote'), function(n){ n.textContent = linked ? 'Layout, cards, groups and sorting are shared. Game order and which games show follow the Classic / New tab you have open on the page.' : 'Classic and New are set up separately.'; });
+  }
+  [].forEach.call(document.querySelectorAll('.swLink'), function(c){ c.addEventListener('change', function(){
+    if (!c.checked){ linked = false; try{ localStorage.setItem(LINKKEY, '0'); }catch(e){} paintLink(); toast('Classic and New are now separate'); return; }
+    c.checked = false;
+    var differ = SHARED.some(function(k){ return JSON.stringify(states.classic[k]) !== JSON.stringify(states['new'][k]); });
+    if (!differ){ linked = true; try{ localStorage.setItem(LINKKEY, '1'); }catch(e){} saveAll(); paintLink(); toast('Classic and New are linked'); return; }   // already identical: nothing to choose
+    open($('dlgSame'));
+  }); });
+  function makeSame(src){
+    var dst = src === 'classic' ? 'new' : 'classic';
+    linked = true; try{ localStorage.setItem(LINKKEY, '1'); }catch(e){}
+    mirror(states[src], states[dst], dst); saveAll(); paintLink(); apply();
+    if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); }
+    toast((src === 'classic' ? 'Classic' : 'New') + ' settings now used for both');
+  }
+  $('sameClassic').addEventListener('click', function(){ shut($('dlgSame')); makeSame('classic'); });
+  $('sameNew').addEventListener('click', function(){ shut($('dlgSame')); makeSame('new'); });
+  $('sameNo').addEventListener('click', function(){ shut($('dlgSame')); });
+  paintTabs(); paintLink();
 
   /* ----- a one-time nudge on the 4th different day the page is opened ----- */
   (function(){
@@ -3903,11 +4020,13 @@ window.SG_WORDS = {
     setTimeout(function(){ if (!dlg.open && !cf.open) open(tip); }, 900);
   })();
   function settingsExit(){
-    if (JSON.stringify(state) === setSnap){ shut(dlg); return; }
+    if (JSON.stringify([states.classic, states['new']]) === setSnap){ shut(dlg); return; }
     askExit({ title:'Save your settings?', msg:'You changed some settings. Save them and exit, or go back to how they were when you opened this?', save:function(){ shut(dlg); }, discard:function(){
-      var was = state.fullscreen; state = clean(JSON.parse(setSnap)); save(); apply();
+      var wasI = state.indexFs, wasG = state.fullscreen, sn = JSON.parse(setSnap);
+      states.classic = cleanFor('classic', sn[0]); states['new'] = cleanFor('new', sn[1]); syncGlobal(); state = states[tab]; saveAll(); apply();
       buildLayouts(); refreshSwitches(); refreshSort(); buildOrder();
-      if (state.fullscreen !== was){ if (state.fullscreen){ fsUserExited = false; fsEnter(); } else fsExit(); }
+      if (state.fullscreen !== wasG) applyGamesFs(state.fullscreen);
+      if (state.indexFs !== wasI){ if (state.indexFs){ fsUserExited = false; fsEnter(); } else fsExit(); }
       shut(dlg); toast('Changes discarded');
     } });
   }
@@ -3920,7 +4039,7 @@ window.SG_WORDS = {
     $('btnSettings').focus();
   });
   window.addEventListener('popstate', function(){ if (xdlg.open) shut(xdlg); if (gdlg.open) shut(gdlg); if (cf.open) shut(cf); if (dlg.open){ pushed = false; shut(dlg); } });
-  window.addEventListener('storage', function(e){ if (e.key === KEY){ load(); apply(); if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); } } if (dlg.open) buildResets(); });
+  window.addEventListener('storage', function(e){ if (e.key === KEY || e.key === KEYS['new']){ load(); apply(); if (dlg.open){ buildLayouts(); refreshSwitches(); refreshSort(); buildOrder(); } } if (dlg.open) buildResets(); });
 })();
 </script>
 <script>
