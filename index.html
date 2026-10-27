@@ -3670,6 +3670,26 @@ window.SG_WORDS = {
     [].forEach.call(document.querySelectorAll('#fsModeTabs [data-fsm]'), function(b){ var on = b.dataset.fsm === m; b.setAttribute('aria-checked', String(on)); b.setAttribute('aria-selected', String(on)); });
     var n = $('fsModeNote'); if (n) n.textContent = m === 'on' ? 'Every game keeps asking for fullscreen' : m === 'off' ? 'Every game stays out of fullscreen' : 'Each game uses the fullscreen setting you gave it. Switching back here restores them.';
   }
+  /* If a game's own fullscreen setting is changed by hand while On/Off is forced here, the portal steps aside: it switches to Per game and every game keeps whatever it has right now. */
+  function fsDrifted(exp){
+    var bad = false;
+    GAME_FS.forEach(function(g){ var r = readJsonField(g[0], g[1]); if (r.skip) return; var cur = (r.set && typeof r.v === 'boolean') ? r.v : g[2]; if (cur !== exp) bad = true; });
+    try{ var rr = localStorage.getItem('rampage_fullscreen'); var rv = rr === null ? true : rr === '1'; if (rv !== exp) bad = true; }catch(e){}
+    var y = readJsonField('yarnunravel.v1.save', 'fs'); if (y.has && !y.skip && y.set && typeof y.v === 'boolean' && y.v !== exp) bad = true;
+    try{ var raw = localStorage.getItem('pacmansWar_save_v1'); if (raw){ var p = JSON.parse(raw); if (p && p.settings && typeof p.settings.fullscreenPref === 'boolean' && p.settings.fullscreenPref !== exp) bad = true;
+      if (p && p.profileSettings && typeof p.profileSettings.fullscreenPref === 'boolean' && p.profileSettings.fullscreenPref !== exp) bad = true; } }catch(e){}
+    return bad;
+  }
+  function checkFsDrift(){
+    var m = getFsMode(); if (m === 'game') return;
+    if (fsDrifted(m === 'on')){
+      try{ localStorage.removeItem(FSMODE); localStorage.removeItem(FSREC); }catch(e){}
+      paintFsMode(); toast('A game changed its own fullscreen, so fullscreen is now set per game');
+    }
+  }
+  checkFsDrift();
+  window.addEventListener('pageshow', checkFsDrift); window.addEventListener('focus', checkFsDrift);
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) checkFsDrift(); });
   [].forEach.call(document.querySelectorAll('#fsModeTabs [data-fsm]'), function(b){ b.addEventListener('click', function(){ setFsMode(b.dataset.fsm); }); });
   $('swScores').addEventListener('change', function(){ state.scores = this.checked; save(); apply(); refreshSwitches(); refreshOrder(); });
   $('swGnames').addEventListener('change', function(){ state.gnames = this.checked; save(); apply(); });
